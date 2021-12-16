@@ -1,3 +1,18 @@
 .root {
 
 }
+
+.login {
+  display: flex;
+  flex-direction: column;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+
+    .field {
+      display: block;
+      height: 20px;
+    }
+  }
+}
