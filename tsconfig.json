@@ -2,6 +2,11 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Create React App",
     "compilerOptions": {
+      "plugins": [
+        { 
+          "name": "typescript-plugin-css-modules"
+        }
+      ],
       "lib": ["dom", "dom.iterable", "esnext"],
       "module": "esnext",
       "target": "es5",
