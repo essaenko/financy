@@ -1,13 +1,136 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useState,
+  MouseEvent,
+  useEffect,
+} from 'react'
+import { observer } from 'mobx-react-lite'
+import { Link, useHistory } from 'react-router-dom'
+import classnames from 'classnames'
 
-export const AuthRegistration = (): JSX.Element => {
+import { UserState } from '../../models/UserModel'
+
+import css from 'modules/auth/auth.module.css'
+
+enum FormStateList {
+  Ok,
+  InvalidEmail,
+  InvalidName,
+  InvalidPassword,
+}
+
+type PropsType = {
+  user: UserState,
+}
+
+export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
+  const [email, setEmail] = useState<string>('')
+  const [name, setName] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [passwordCopy, setPasswordCopy] = useState<string>('')
+  const [formState, setFormState] = useState<FormStateList>(FormStateList.Ok)
+
+  const history = useHistory()
+
+  useEffect(() => {
+    if (user.email === void 0) {
+      user.fetchUser()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user.email !== void 0) {
+      history.push('/dashboard')
+    }
+  }, [user.email])
+
+  const onChangeFactory =
+    (setter: Dispatch<SetStateAction<string>>) =>
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
+      setter(target.value)
+    }
+
+  const onSubmit = (event: MouseEvent) => {
+    event.preventDefault()
+    let hasError: boolean = false
+
+    if (
+      !email.includes('@') ||
+      email.split('@')[0].length < 2 ||
+      email.split('@')[1].length < 3
+    ) {
+      console.log(email.includes('@'), email.split('@')[0], email.split('@')[1])
+      setFormState(FormStateList.InvalidEmail)
+      hasError = true
+    }
+
+    if (name.length < 2) {
+      setFormState(FormStateList.InvalidName)
+      hasError = true
+    }
+
+    if (password !== passwordCopy) {
+      setFormState(FormStateList.InvalidPassword)
+      hasError = true
+    }
+
+    if (!hasError) {
+      setFormState(FormStateList.Ok)
+      user.createUser(email, name, password)
+    }
+  }
+
   return (
-    <div>
-      RegistrationForm
-      <Link to={'/'}>
-        Login
-      </Link>
+    <div className={css.registration}>
+      <form className={css.form}>
+        <h2>Registration</h2>
+        <input
+          type="text"
+          placeholder={'Full name'}
+          className={classnames(css.field, {
+            [css.invalidField]: formState === FormStateList.InvalidName,
+          })}
+          value={name}
+          onChange={onChangeFactory(setName)}
+        />
+        <input
+          type="email"
+          placeholder={'E-mail'}
+          className={classnames(css.field, {
+            [css.invalidField]: formState === FormStateList.InvalidEmail,
+          })}
+          value={email}
+          onChange={onChangeFactory(setEmail)}
+        />
+        <input
+          type="password"
+          placeholder={'Password'}
+          className={classnames(css.field, {
+            [css.invalidField]: formState === FormStateList.InvalidPassword,
+          })}
+          value={password}
+          onChange={onChangeFactory(setPassword)}
+        />
+        <input
+          type="password"
+          placeholder={'Repeat password'}
+          className={classnames(css.field, {
+            [css.invalidField]: formState === FormStateList.InvalidPassword,
+          })}
+          value={passwordCopy}
+          onChange={onChangeFactory(setPasswordCopy)}
+        />
+        <div className={css.regSubmitWrapper}>
+          <button className={css.regSubmit} onClick={onSubmit}>
+            Done
+          </button>
+        </div>
+        <Link to={'/'} className={css.link}>
+          Already have account
+        </Link>
+      </form>
     </div>
   )
-}
+})

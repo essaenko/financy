@@ -1,33 +1,44 @@
-export interface APIParsedResponse<T> {
-  success?: true,
-  error?: true,
-  payload?: T
+export interface APIParsedResponse<T = any> {
+  success?: true;
+  error?: true;
+  payload?: T;
+  errorCode?: string;
 }
 
 export enum APIResponseStatusList {
-  Ok,
-  Error
+  Ok = 'Ok',
+  Error = 'Error',
+}
+
+export enum APIErrorList {
+  UserNotFountException = 'UserNotFountException',
+  NoUserAccountException = 'NoUserAccountException',
+  InvalidResponseException = 'InvalidResponseException',
 }
 
 export interface APIResponse<T> {
-  status: APIResponseStatusList,
-  payload?: T,
+  status?: APIResponseStatusList;
+  error?: keyof typeof APIErrorList;
+  payload?: T;
 }
 
-export const requestHandler = async <T = any>(response: Response): Promise<APIParsedResponse<T>> => {
+export const requestHandler = async <T = any>(
+  response: Response
+): Promise<APIParsedResponse<T>> => {
   if (response.status !== 200) {
     return {
       error: true,
+      errorCode: APIErrorList.UserNotFountException,
     }
   }
 
   try {
-    const json: APIResponse<T> = await response.json();
+    const json: APIResponse<T> = await response.json()
 
     if (json.status === APIResponseStatusList.Error) {
       return {
         error: true,
-        payload: json.payload,
+        errorCode: APIErrorList[json.error!!],
       }
     }
 
@@ -38,6 +49,7 @@ export const requestHandler = async <T = any>(response: Response): Promise<APIPa
   } catch (e) {
     return {
       error: true,
+      errorCode: APIErrorList.InvalidResponseException,
     }
   }
 }

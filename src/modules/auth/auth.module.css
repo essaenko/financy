@@ -2,17 +2,114 @@
 
 }
 
-.login {
+.login, .registration {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 
   .form {
     display: flex;
     flex-direction: column;
+    width: 400px;
+
+    h2 {
+      text-align: center;
+    }
 
     .field {
       display: block;
-      height: 20px;
+      height: 35px;
+      line-height: 35px;
+      font-size: 18px;
+      padding: 0 10px;
+      border: 1px solid #c2c2c2;
+      color: #888;
+
+      &.invalidField {
+        border: 2px solid red !important;
+
+      }
+
+      &:focus {
+        z-index: 1;
+      }
+
+      &:first-of-type {
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+      }
+
+      &:not(:first-of-type) {
+        border-top: 0;
+      }
+
+      &:last-of-type {
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+    }
+
+    .link {
+      margin: 20px auto 0;
+      text-decoration: none;
+      color: rgb(0, 122, 255);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .submit {
+      margin: 10px auto 0;
+      border: 0;
+      background-color: transparent;
+      transition: .1s all;
+      transform: rotate(180deg);
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.05) rotate(180deg);
+      }
+
+      svg {
+        width: 35px;
+        height: 35px;
+
+        path {
+          fill: #c2c2c2;
+        }
+      }
+    }
+  }
+}
+
+.registration {
+  .form {
+    .regSubmitWrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 15px;
+
+      .regSubmit {
+        display: inline;
+        padding: 4px 15px;
+        font-size: 18px;
+        position: relative;
+        border: 1px solid #07c;
+        border-radius: 4px;
+        font-weight: 400;
+        background: linear-gradient(#42a1ec,#0070c9);
+        color: #fff;
+        width: auto;
+
+        &:hover {
+          cursor: pointer;
+          background: linear-gradient(#51a9ee,#147bcd);
+        }
+      }
     }
   }
 }
