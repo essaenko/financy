@@ -9,9 +9,7 @@ import React, {
 import { observer } from 'mobx-react-lite'
 import { Link, useHistory } from 'react-router-dom'
 
-import { UserState } from '../../models/UserModel'
-
-import { ReactComponent as ArrowOutline } from 'static/icons/arrow-outline.svg'
+import { UserState } from '../../models/user.model'
 
 import css from './auth.module.css'
 
@@ -29,13 +27,13 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
     if (user.email === void 0) {
       user.fetchUser()
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (user.email !== void 0) {
-      history.push('/dashboard')
+      history.push('/dashboard/transaction')
     }
-  }, [user.email])
+  }, [history, user.email])
 
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>
@@ -68,7 +66,7 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
           onChange={onChangeFactory(setPassword)}
         />
         <button className={css.submit} onClick={onSubmit}>
-          <ArrowOutline />
+          Login
         </button>
         <Link to={'/signup'} className={css.link}>
           Signup

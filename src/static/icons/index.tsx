@@ -1,5 +1,3 @@
-import ArrowOutline from './arrow-outline.svg';
+import ArrowOutline from './arrow-outline.svg'
 
-export {
-  ArrowOutline
-}
+export { ArrowOutline }

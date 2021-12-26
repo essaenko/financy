@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite'
 import { Link, useHistory } from 'react-router-dom'
 import classnames from 'classnames'
 
-import { UserState } from '../../models/UserModel'
+import { UserState } from '../../models/user.model'
 
 import css from 'modules/auth/auth.module.css'
 
@@ -38,13 +38,13 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
     if (user.email === void 0) {
       user.fetchUser()
     }
-  }, [])
+  }, [user])
 
   useEffect(() => {
     if (user.email !== void 0) {
       history.push('/dashboard')
     }
-  }, [user.email])
+  }, [history, user.email])
 
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>

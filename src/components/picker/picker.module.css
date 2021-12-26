@@ -1,0 +1,23 @@
+.root {
+  display: flex;
+  border: 1px solid var(--system-blue);
+  justify-content: space-around;
+  border-radius: 5px;
+  transition: .2s all;
+
+  .tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 7px;
+    width: 100%;
+    cursor: pointer;
+    transition: .2s all;
+    color: var(--system-blue);
+
+    &.activeTab {
+      background-color: var(--system-blue);
+      color: var(--system-light-gray);
+    }
+  }
+}

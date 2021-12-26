@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
+import './global.vars.css'
 
 import { App } from 'modules/app'
 import reportWebVitals from './reportWebVitals'

@@ -1,0 +1,93 @@
+.root {
+  padding: 20px;
+  overflow: scroll;
+  width: 100%;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+
+  .picker {
+    margin: 0 20px;
+    width: 240px;
+  }
+
+  .iconLink {
+    width: var(--defaultIconWidth);
+    height: var(--defaultIconHeight);
+    cursor: pointer;
+  }
+
+  h3 {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+
+  .icon {
+    width: var(--defaultIconWidth);
+    height: var(--defaultIconHeight);
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .loader {
+    color: var(--system-light-text);
+
+    .icon {
+      display: block;
+      margin: 10px auto 0;
+    }
+  }
+
+  .categoriesOwner {
+    & > .deepNode {
+      margin-bottom: 5px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .deepNode {
+    padding: 2px 10px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    color: var(--system-black);
+
+    &.parentNode {
+      &:hover {
+        background-color: transparent;
+      }
+    }
+
+    &:hover {
+      background-color: var(--system-light-gray);
+      border-radius: 4px;
+      cursor: pointer;
+
+      transition: .3s ease;
+    }
+
+    &:first-child {
+      margin-top: 5px;
+    }
+    .deepNode {
+      margin-left: 5px;
+    }
+  }
+
+  .categoryCreate {
+    margin-top: 20px;
+    max-width: 600px;
+
+    span {
+      display: block;
+      margin-top: 10px;
+      color: var(--system-red);
+    }
+  }
+}

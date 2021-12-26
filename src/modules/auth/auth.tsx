@@ -16,7 +16,7 @@ export const Auth = (): JSX.Element => {
         history.push('/')
       }
     })
-  }, [])
+  }, [history])
 
   return (
     <div className={css.root}>

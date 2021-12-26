@@ -3,9 +3,93 @@ body {
   font-family: SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+}
+
+html {
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h2, h3 {
+  font-weight: 300;
+}
+h2 {
+  font-size: 29px;
+  line-height: 37px;
+  font-weight: 300;
+}
+
+h3 {
+  font-size: 23px;
+  line-height: 30px;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: var(--system-blue);
+  text-decoration: none;
+}
+
+#root {
+  height: 100%;
+}
+
+form {
+  input, select {
+    width: 100%;
+    display: block;
+    border-color: var(--system-silver);
+    padding: 2px 8px;
+    border-width: 1px;
+    color: var(--system-black);
+    font-size: 18px;
+    border-radius: 2px;
+    outline: none;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: var(--system-blue);
+      box-shadow: var(--system-light-blue) 0 0 2px;
+      border-radius: 2px;
+    }
+
+    & + input, & + select {
+      margin-top: 10px;
+    }
+
+    & + button {
+      margin-top: 10px;
+    }
+  }
+
+  button {
+    display: inline;
+    padding: 4px 15px;
+    font-size: 18px;
+    position: relative;
+    border: 1px solid #07c;
+    border-radius: 4px;
+    font-weight: 400;
+    background: linear-gradient(#42a1ec,#0070c9);
+    color: var(--system-white);
+    width: auto;
+
+    &:hover {
+      cursor: pointer;
+      background: linear-gradient(#51a9ee,#147bcd);
+    }
+  }
 }

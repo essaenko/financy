@@ -1,0 +1,138 @@
+.root {
+  padding: 20px;
+  width: 100%;
+  overflow: scroll;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+
+    h2 {
+      margin-right: 10px;
+    }
+  }
+
+  .headerMenu {
+    display: flex;
+    align-items: center;
+
+    .picker {
+      margin: 0 auto;
+      width: 240px;
+    }
+  }
+
+  .transactionCreate {
+    margin-top: 20px;
+    max-width: 600px;
+
+    span {
+      display: block;
+      margin-top: 10px;
+      color: var(--system-red);
+    }
+
+    .editActions {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .removeAction {
+      display: inline-block;
+      margin-left: 10px;
+      margin-top: 0;
+      padding: 5px 15px;
+      font-size: 18px;
+      font-weight: 400;
+      border-radius: 4px;
+
+      &:hover {
+        cursor: pointer;
+        background-color: var(--system-red-light);
+      }
+    }
+  }
+
+  .transaction {
+    background-color: var(--system-opacied-gray);
+    color: var(--system-white);
+    padding: 10px;
+    border-radius: 5px;
+    min-width: 300px;
+    max-width: 600px;
+
+    &:hover {
+      text-decoration: none !important;
+    }
+
+    & + .transaction {
+      margin-top: 10px;
+    }
+
+    .payment {
+      display: flex;
+      font-size: 19px;
+
+      span {
+        margin-left: auto;
+        font-size: 14px;
+        padding-left: 20px;
+      }
+    }
+
+    .cost {
+      margin-top: 10px;
+      font-size: 19px;
+    }
+
+    .category {
+      margin-top: 10px;
+    }
+
+    .comment {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    &.transfer {
+      .cost {
+        color: var(--system-white) !important;
+      }
+    }
+
+    &.income {
+      .cost {
+        color: var(--system-green);
+      }
+    }
+
+    &.outcome {
+      .cost {
+        color: var(--system-red);
+      }
+    }
+  }
+
+  .icon {
+    width: var(--defaultIconWidth);
+    height: var(--defaultIconHeight);
+    cursor: pointer;
+  }
+
+  .content {
+    .info {
+      color: var(--system-light-text);
+    }
+
+    a {
+      margin-top: 10px;
+      display: block;
+
+      &:hover {
+       text-decoration: underline;
+      }
+    }
+  }
+}

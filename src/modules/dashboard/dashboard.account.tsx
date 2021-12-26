@@ -1,30 +1,48 @@
-import React, { useEffect, MouseEvent } from 'react'
+import React, { useEffect, MouseEvent, useCallback } from 'react'
 import { observer } from 'mobx-react-lite'
+import classnames from 'classnames'
+import { useHistory } from 'react-router-dom'
+
 import { state } from '../../models'
 import { APIErrorList } from '../../api/api.handler'
 
+import css from './dashboard.module.css'
+
 export const DashboardAccount = observer((): JSX.Element => {
   const { account } = state
+  const history = useHistory()
   useEffect(() => {
     if (account.id === void 0) {
       account.fetchAccount()
     }
   }, [account, account.id])
 
-  const onClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    account.createAccount()
-  }
+  const onClick = useCallback(
+    async (event: MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault()
+
+      const result = await account.createAccount()
+
+      if (result.success) {
+        history.push('/dashboard/family')
+      }
+    },
+    [account, history]
+  )
 
   return (
-    <div>
-      {account.loading && 'Loading account data'}
+    <div
+      className={classnames(css.accountWindow, {
+        [css.loaded]: account.loaded,
+      })}
+    >
       {account.error && account.error === APIErrorList.NoUserAccountException && (
-        <div>
-          No account found. You can create your own account, or join to your
-          family with existed account
+        <form className={css.accountPopup}>
+          No account found. <br />
+          You can create your own account, or join <br /> your family with
+          existed account
           <button onClick={onClick}>Create my own account</button>
-        </div>
+        </form>
       )}
     </div>
   )

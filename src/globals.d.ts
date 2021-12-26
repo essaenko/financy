@@ -13,6 +13,8 @@ declare module "*.module.css" {
   export default styles;
 }
 
+declare module "*.png"
+
 declare module '@fortawesome/fontawesome-free/svgs/brands/*';
 declare module '@fortawesome/fontawesome-free/svgs/regular/*' {
  const src: string;

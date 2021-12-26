@@ -14,6 +14,7 @@ export enum APIErrorList {
   UserNotFountException = 'UserNotFountException',
   NoUserAccountException = 'NoUserAccountException',
   InvalidResponseException = 'InvalidResponseException',
+  ServiceUnreachableException = 'ServiceUnreachableException',
 }
 
 export interface APIResponse<T> {
@@ -23,15 +24,32 @@ export interface APIResponse<T> {
 }
 
 export const requestHandler = async <T = any>(
-  response: Response
+  request: Promise<Response>
 ): Promise<APIParsedResponse<T>> => {
-  if (response.status !== 200) {
-    return {
-      error: true,
-      errorCode: APIErrorList.UserNotFountException,
+  try {
+    const response = await request;
+    if (response.status !== 200) {
+      return {
+        error: true,
+        errorCode: APIErrorList.UserNotFountException,
+      }
+    }
+
+    return parseResponse(response);
+  } catch (e: any) {
+    if (e.status === void 0) {
+      return {
+        error: true,
+        errorCode: APIErrorList.ServiceUnreachableException,
+      }
+    } else {
+      return {error: true}
     }
   }
 
+}
+
+const parseResponse = async <T>(response: Response): Promise<APIParsedResponse<T>> => {
   try {
     const json: APIResponse<T> = await response.json()
 
