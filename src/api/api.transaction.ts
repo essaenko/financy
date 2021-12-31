@@ -1,4 +1,8 @@
-import { APIParsedResponse, requestHandler } from './api.handler'
+import {
+  APIParsedResponse,
+  CollectionResponse,
+  requestHandler,
+} from './api.handler'
 import {
   TransactionModel,
   TransactionTypeList,
@@ -6,10 +10,24 @@ import {
 import { api } from './api.transport'
 
 export const fetchTransactions = async (
-  page: number
-): Promise<APIParsedResponse<TransactionModel[]>> => {
-  return await requestHandler<TransactionModel[]>(
-    api.get('/transaction', { page })
+  page: number,
+  perPage: number,
+  type?: TransactionTypeList,
+  category?: number,
+  dateFrom?: number,
+  dateTo?: number,
+  date?: number
+): Promise<APIParsedResponse<CollectionResponse<TransactionModel[]>>> => {
+  return await requestHandler<CollectionResponse<TransactionModel[]>>(
+    api.get('/transaction', {
+      page,
+      perPage,
+      type: type?.toString() ?? null,
+      dateFrom: dateFrom ?? null,
+      dateTo: dateTo ?? null,
+      date: date ?? null,
+      category: category ?? null,
+    })
   )
 }
 
@@ -93,4 +111,12 @@ export const updateTransaction = async (
   return await requestHandler<TransactionModel>(
     api.post('/transaction/update', payload)
   )
+}
+
+(window as any).__test__ = {
+  transaction: {
+    mock: () => {
+      api.get('/transaction/mock');
+    }
+  }
 }

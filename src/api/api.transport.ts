@@ -22,13 +22,14 @@ class Api {
   }
 
   private objectToQuery = (params: Record<string, string | number | boolean | null>): string => {
+    const query = new URLSearchParams();
     const keys: string[] = Object.keys(params);
 
-    return keys.reduce((result, key, index) => {
-      result += `${index > 0 && '&'}${key}=${params[key]}`
+    keys.forEach((key) => {
+      query.append(key, params[key]?.toString() ?? '');
+    });
 
-      return result;
-    }, '');
+    return query.toString();
   }
 
   async get(path: string, params?: Record<string, string | number | boolean | null>, headers?: Record<string, string>): Promise<Response> {
@@ -41,6 +42,11 @@ class Api {
 
   async useToken(token: string) {
     this.token = token;
+  }
+
+  removeToken() {
+    localStorage.removeItem(AUTH_TOKEN_LOCAL_STORAGE_KEY);
+    this.token = null;
   }
 }
 

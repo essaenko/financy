@@ -1,10 +1,10 @@
 import React, {
-  useState,
-  Dispatch,
-  SetStateAction,
   ChangeEvent,
+  Dispatch,
   MouseEvent,
+  SetStateAction,
   useEffect,
+  useState,
 } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Link, useHistory } from 'react-router-dom'
@@ -12,6 +12,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { UserState } from '../../models/user.model'
 
 import css from './auth.module.css'
+import { APIErrorList } from '../../api/api.handler'
 
 type PropsType = {
   user: UserState,
@@ -20,6 +21,7 @@ type PropsType = {
 export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [notification, setNotification] = useState<string>('')
 
   const history = useHistory()
 
@@ -42,8 +44,13 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
     }
   const onSubmit = (event: MouseEvent) => {
     event.preventDefault()
+    setNotification('')
 
-    user.loginUser(email, password)
+    user.loginUser(email, password).then((res) => {
+      if (res.errorCode === APIErrorList.UnauthorizedException) {
+        setNotification('User not found, check your credentials and try again')
+      }
+    })
   }
 
   return (
@@ -65,6 +72,7 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
           value={password}
           onChange={onChangeFactory(setPassword)}
         />
+        <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit}>
           Login
         </button>

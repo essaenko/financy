@@ -11,6 +11,7 @@ import {CategoryTypeList} from "../../models/category.model";
 import {TransactionFormTypeList} from "modules/transaction/transaction.types";
 
 import css from './transaction.module.css'
+import {NetworkComponentStatusList} from "../../api/api.handler";
 
 export const TransactionCreate = observer((): JSX.Element => {
   const [payment, setPayment] = useState<number>(0)
@@ -22,18 +23,18 @@ export const TransactionCreate = observer((): JSX.Element => {
   const [notification, setNotification] = useState<string>('');
   const [transactionFormType, setTransactionFormType] = useState<TransactionFormTypeList>(TransactionFormTypeList.Transaction);
   const history = useHistory();
-  const { collection: payments, loaded: paymentsLoaded } = state.payment
-  const { collection: categories, loaded: categoriesLoaded } = state.categories
+  const { collection: payments, status: paymentsStatus } = state.payment
+  const { collection: categories, status: categoriesStatus } = state.categories
 
   useEffect(() => {
-    if (!paymentsLoaded && payments.length === 0) {
+    if (paymentsStatus === NetworkComponentStatusList.Untouched) {
       state.payment.fetchPaymentMethods();
     }
 
-    if (!categoriesLoaded && categories.length === 0) {
+    if (categoriesStatus === NetworkComponentStatusList.Untouched) {
       state.categories.fetchCategories();
     }
-  }, [categories, categoriesLoaded, payments, paymentsLoaded])
+  }, [categories, categoriesStatus, payments, paymentsStatus])
 
   const onChangeTransactionType = (id: TransactionFormTypeList) => () => {
     setTransactionFormType(id);
@@ -109,7 +110,12 @@ export const TransactionCreate = observer((): JSX.Element => {
     <div>
       <div>
         <div className={css.headerMenu}>
-          <Link to={'/dashboard/transaction'}>
+          <Link
+            to={{
+              pathname: '/dashboard/transaction',
+              search: history.location.search
+            }}
+          >
             Back
           </Link>
           <Picker

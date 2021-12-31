@@ -9,12 +9,13 @@ import {TransactionFormTypeList} from "modules/transaction/transaction.types";
 
 import css from './transaction.module.css';
 import {CategoryTypeList} from "../../models/category.model";
+import {NetworkComponentStatusList} from "../../api/api.handler";
 
 export const TransactionEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>()
-  const { collection: payments, loaded: paymentsLoaded } = state.payment;
-  const { collection: categories, loaded: categoriesLoaded } = state.categories;
-  const { collection: transactions, loaded: transactionsLoaded, loading: transactionsLoading } = state.transaction;
+  const { collection: payments, status: paymentsStatus } = state.payment;
+  const { collection: categories, status: categoriesStatus } = state.categories;
+  const { collection: transactions, status } = state.transaction;
   const transaction = transactions.find(
     (transaction) => transaction.id === +match.params.id
   );
@@ -42,18 +43,18 @@ export const TransactionEdit = observer((): JSX.Element => {
   }, [transaction]);
 
   useEffect(() => {
-    if (!paymentsLoaded && payments.length === 0) {
+    if (paymentsStatus === NetworkComponentStatusList.Untouched) {
       state.payment.fetchPaymentMethods();
     }
 
-    if (!categoriesLoaded && categories.length === 0) {
+    if (categoriesStatus === NetworkComponentStatusList.Untouched) {
       state.categories.fetchCategories();
     }
 
-    if (!transactionsLoaded && !transactionsLoading && transactions.length === 0) {
+    if (status === NetworkComponentStatusList.Untouched) {
       state.transaction.fetchTransactions();
     }
-  }, [categories, categoriesLoaded, payments, paymentsLoaded, transactions, transactionsLoaded, transactionsLoading])
+  }, [categories, categoriesStatus, payments, paymentsStatus, status, transactions])
 
   const onChangeFactory =
     <T extends any>(setter: Dispatch<T>) =>
@@ -122,7 +123,14 @@ export const TransactionEdit = observer((): JSX.Element => {
   return (
     <div>
       <div>
-        <Link to={'/dashboard/transaction'}>Back</Link>
+        <Link
+          to={{
+            pathname: '/dashboard/transaction',
+            search: history.location.search,
+          }}
+        >
+          Back
+        </Link>
         <h2>Edit {transactionFormType === TransactionFormTypeList.Transaction ? 'transaction' : 'transfer'}</h2>
       </div>
       <div className={css.transactionCreate}>

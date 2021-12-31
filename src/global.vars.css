@@ -6,9 +6,10 @@
   --system-mate-silver: #e4e6e8;
   --system-mate-aluminium: #d4d4d4;
   --system-aluminium: #c5c5c5;
-  --system-opacied-gray: rgba(29,29,31,0.72);
+  --system-opacied-gray: rgba(29,29,31,0.70);
   --system-light-gray: #f3f3f3;
   --system-white: #fff;
+  --system-opacied-white: rgba(255,255,255, .7);
   --system-blue: rgb(0, 122, 255);
   --system-light-blue: #3b7fca;
   --system-red: orangered;

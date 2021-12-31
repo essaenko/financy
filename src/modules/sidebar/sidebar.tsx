@@ -14,6 +14,13 @@ export const Sidebar = (): JSX.Element => {
         <span>Transactions</span>
       </NavLink>
       <NavLink
+        to={'/dashboard/stats'}
+        className={css.link}
+        activeClassName={css.activeLink}
+      >
+        <span>Statistics</span>
+      </NavLink>
+      <NavLink
         to={'/dashboard/payment'}
         className={css.link}
         activeClassName={css.activeLink}

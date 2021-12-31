@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx'
 import {AccountModel} from "./account.model";
 import {createPaymentMethod, fetchPaymentMethods, removePaymentMethod, updatePaymentMethod} from "../api/api.payment";
-import {APIParsedResponse} from "../api/api.handler";
+import {APIParsedResponse, NetworkComponentStatusList} from "../api/api.handler";
 
 export interface PaymentMethodModel {
   id: number | undefined
@@ -39,8 +39,7 @@ export class PaymentMethodState implements PaymentMethodModel {
 
 export class PaymentMethodCollectionState {
   collection: PaymentMethodState[] = [];
-  loading: boolean = false;
-  loaded: boolean = false;
+  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched
 
   constructor() {
     makeAutoObservable(this);
@@ -86,16 +85,14 @@ export class PaymentMethodCollectionState {
 
   async fetchPaymentMethods(): Promise<APIParsedResponse<PaymentMethodModel[]>> {
     runInAction(() => {
-      this.loading = true;
-      this.loaded = false;
+      this.status = NetworkComponentStatusList.Loading;
     });
 
     const result = await fetchPaymentMethods();
 
     if (result.success && result.payload) {
       runInAction(() => {
-        this.loading = false;
-        this.loaded = true;
+        this.status = NetworkComponentStatusList.Loaded
         this.collection = result.payload?.map((payment) => {
           const instance = new PaymentMethodState();
           instance.setState(payment);
@@ -107,8 +104,7 @@ export class PaymentMethodCollectionState {
       return result
     } else {
       runInAction(() => {
-        this.loading = false;
-        this.loaded = false;
+        this.status = NetworkComponentStatusList.Failed
       });
 
       return result

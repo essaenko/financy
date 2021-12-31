@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from "mobx";
 import {createAccount, fetchAccount, fetchAccountUsers} from "../api/api.account";
-import {APIParsedResponse} from "../api/api.handler";
+import {APIErrorList, APIParsedResponse, NetworkComponentStatusList} from "../api/api.handler";
 import {UserModel} from "./user.model";
 
 export interface AccountModel {
@@ -17,10 +17,8 @@ export class AccountState implements AccountModel {
   updatedAt: string | undefined
   owner: UserModel | undefined
   users: UserModel[] = []
-
-  loading: boolean = false
-  loaded: boolean = false
-  error: string = ""
+  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched
+  error: APIErrorList | null = null;
 
   constructor() {
     makeAutoObservable(this)
@@ -28,14 +26,11 @@ export class AccountState implements AccountModel {
 
   private setAccountData(account: AccountModel) {
     runInAction(() => {
+      this.status = NetworkComponentStatusList.Loaded
       this.id = account.id
       this.createdAt = account.createdAt
       this.updatedAt = account.updatedAt
       this.owner = account.owner
-
-      this.loading = false
-      this.loaded = true
-      this.error = ""
     })
   }
 
@@ -44,18 +39,18 @@ export class AccountState implements AccountModel {
       this.setAccountData(response.payload)
     } else {
       runInAction(() => {
-        this.loading = false
-        this.loaded = false
-        this.error = response.errorCode?.toString() || ""
+        this.status = NetworkComponentStatusList.Failed
+        if (response.errorCode) {
+          this.error = APIErrorList[response.errorCode];
+        }
       })
     }
   }
 
   async fetchAccount() {
     runInAction(() => {
-      this.loading = true
-      this.loaded = false
-      this.error = ""
+      this.status = NetworkComponentStatusList.Loading
+      this.error = null
     })
 
     this.handleResponse(await fetchAccount());

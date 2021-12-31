@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  font-family: SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
@@ -47,6 +46,31 @@ a {
   height: 100%;
 }
 
+input[type=date] {
+  display: block;
+  border-color: var(--system-silver);
+  padding: 2px 8px;
+  border-width: 1px;
+  color: var(--system-black);
+  font-size: 16px;
+  border-radius: 2px;
+  border-style: solid;
+  outline: none;
+  box-sizing: border-box;
+  -webkit-appearance:none;
+  font-family: system-ui,-apple-system,BlinkMacSystemFont;
+
+  &:focus {
+    border-color: var(--system-blue);
+    box-shadow: var(--system-light-blue) 0 0 2px;
+    border-radius: 2px;
+  }
+}
+
+img {
+  aspect-ratio: auto 25 / 25;
+}
+
 form {
   input, select {
     width: 100%;
@@ -57,8 +81,10 @@ form {
     color: var(--system-black);
     font-size: 18px;
     border-radius: 2px;
+    border-style: solid;
     outline: none;
     box-sizing: border-box;
+    -webkit-appearance:none;
 
     &:focus {
       border-color: var(--system-blue);
@@ -86,6 +112,19 @@ form {
     background: linear-gradient(#42a1ec,#0070c9);
     color: var(--system-white);
     width: auto;
+
+    &.flat {
+      background: var(--system-silver);
+      border: 0;
+      width: 100%;
+      color: var(--system-black);
+      transition: .2s;
+
+      &:hover {
+        background: var(--system-aluminium);
+        transition: .2s;
+      }
+    }
 
     &:hover {
       cursor: pointer;

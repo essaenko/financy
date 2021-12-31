@@ -1,14 +1,15 @@
 import React, {ChangeEvent, Dispatch, MouseEvent, useCallback, useEffect, useState} from 'react'
-import { observer } from 'mobx-react-lite'
-import {useHistory, useRouteMatch} from "react-router-dom";
+import {observer} from 'mobx-react-lite'
+import {Link, useHistory, useRouteMatch} from "react-router-dom";
 
 import {state} from "../../models";
 
 import css from './payment.module.css';
+import {NetworkComponentStatusList} from "../../api/api.handler";
 
 export const PaymentEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
-  const { collection: payments, loading, loaded } = state.payment;
+  const { collection: payments, status } = state.payment;
   const payment = payments.find((p) => p.id === +match.params.id)
   const [name, setName] = useState<string>(payment?.name ?? "")
   const [description, setDescription] = useState<string>(payment?.description ?? "")
@@ -17,10 +18,10 @@ export const PaymentEdit = observer((): JSX.Element => {
   const history = useHistory();
 
   useEffect(() => {
-    if (!loaded && !loading) {
+    if (status === NetworkComponentStatusList.Untouched) {
       state.payment.fetchPaymentMethods();
     }
-  }, [loaded, loading])
+  }, [status])
 
   useEffect(() => {
     setName(payment?.name!)
@@ -63,7 +64,12 @@ export const PaymentEdit = observer((): JSX.Element => {
 
   return (
     <div>
-      <h2>Edit payment method</h2>
+      <div>
+        <Link to={"/dashboard/payment"}>
+          Back
+        </Link>
+        <h2>Edit payment method</h2>
+      </div>
       <div className={css.createForm}>
         <form>
           <input

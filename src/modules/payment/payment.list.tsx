@@ -7,9 +7,10 @@ import { state } from '../../models'
 import add from 'static/icons/add.png'
 
 import css from 'modules/payment/payment.module.css'
+import { NetworkComponentStatusList } from '../../api/api.handler'
 
 export const PaymentList = observer(() => {
-  const { collection, loaded, loading } = state.payment
+  const { collection, status } = state.payment
 
   return (
     <>
@@ -20,17 +21,21 @@ export const PaymentList = observer(() => {
         </Link>
       </div>
       <div className={css.content}>
-        {!loaded && loading && collection.length === 0 && (
-          <div className={css.loader}>Loading available payment methods...</div>
-        )}
-        {collection.length === 0 && loaded && (
-          <div className={css.loader}>
-            No payment methods found...
-            <br />
-            <br />
-            <Link to={'/dashboard/payment/create'}>Create first one</Link>
-          </div>
-        )}
+        {status === NetworkComponentStatusList.Loading &&
+          collection.length === 0 && (
+            <div className={css.loader}>
+              Loading available payment methods...
+            </div>
+          )}
+        {collection.length === 0 &&
+          status === NetworkComponentStatusList.Loaded && (
+            <div className={css.loader}>
+              No payment methods found...
+              <br />
+              <br />
+              <Link to={'/dashboard/payment/create'}>Create first one</Link>
+            </div>
+          )}
         {collection.length > 0 && (
           <div className={css.paymentCollection}>
             {collection.map((payment) => {

@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .icon {
+    img {
+      width: 18px;
+      height: 18px;
+      margin: 0 7px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.rightIcon {
+      transform: rotate(180deg);
+      margin-top: 1px;
+    }
+  }
+
+  .pages {
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 20px;
+      margin-right: 5px;
+      text-align: center;
+    }
+  }
+}

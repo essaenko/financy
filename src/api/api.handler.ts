@@ -1,8 +1,23 @@
+import {api} from "./api.transport";
+
 export interface APIParsedResponse<T = any> {
   success?: true;
   error?: true;
   payload?: T;
-  errorCode?: string;
+  errorCode?: APIErrorList;
+}
+
+export interface CollectionResponse<T> {
+  total: number,
+  elements: number,
+  list: T,
+}
+
+export enum NetworkComponentStatusList {
+  Untouched,
+  Loading,
+  Loaded,
+  Failed
 }
 
 export enum APIResponseStatusList {
@@ -11,6 +26,7 @@ export enum APIResponseStatusList {
 }
 
 export enum APIErrorList {
+  UnauthorizedException = 'UnauthorizedException',
   UserNotFountException = 'UserNotFountException',
   NoUserAccountException = 'NoUserAccountException',
   InvalidResponseException = 'InvalidResponseException',
@@ -26,27 +42,24 @@ export interface APIResponse<T> {
 export const requestHandler = async <T = any>(
   request: Promise<Response>
 ): Promise<APIParsedResponse<T>> => {
-  try {
-    const response = await request;
-    if (response.status !== 200) {
+  const response = await request;
+  if (response.status !== 200) {
+    if (response.status === 401) {
+      api.removeToken();
+
       return {
         error: true,
-        errorCode: APIErrorList.UserNotFountException,
+        errorCode: APIErrorList.UnauthorizedException,
       }
     }
 
-    return parseResponse(response);
-  } catch (e: any) {
-    if (e.status === void 0) {
-      return {
-        error: true,
-        errorCode: APIErrorList.ServiceUnreachableException,
-      }
-    } else {
-      return {error: true}
+    return {
+      error: true,
+      errorCode: APIErrorList.UserNotFountException,
     }
   }
 
+  return parseResponse(response);
 }
 
 const parseResponse = async <T>(response: Response): Promise<APIParsedResponse<T>> => {

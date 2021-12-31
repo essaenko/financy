@@ -7,6 +7,9 @@
     "jsx-quotes": [
       1,
       "prefer-double"
+    ],
+    "react-hooks/exhaustive-deps": [
+      0
     ]
   },
   "plugins": [

@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx'
 
 import { AccountModel } from './account.model'
 import { createCategory, fetchCategories } from '../api/api.category'
+import { APIErrorList, NetworkComponentStatusList } from '../api/api.handler'
 
 export enum CategoryTypeList {
   Income = 'Income',
@@ -45,9 +46,8 @@ export class CategoryState implements CategoryModel {
 
 export class CategoryCollectionState {
   collection: CategoryState[] = []
-  loading: boolean = false
-  loaded: boolean = false
-  error: string = ''
+  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched
+  error: APIErrorList | null = null
 
   constructor() {
     makeAutoObservable(this)
@@ -65,16 +65,14 @@ export class CategoryCollectionState {
 
   async fetchCategories() {
     runInAction(() => {
-      this.loading = true
-      this.loaded = false
-      this.error = ''
+      this.status = NetworkComponentStatusList.Loading
+      this.error = null
     })
     const result = await fetchCategories()
 
     if (result.success && result.payload) {
       runInAction(() => {
-        this.loading = false
-        this.loaded = true
+        this.status = NetworkComponentStatusList.Loaded
         this.collection =
           result.payload?.map((category) => {
             const cat = new CategoryState()
@@ -85,9 +83,10 @@ export class CategoryCollectionState {
       })
     } else {
       runInAction(() => {
-        this.loading = false
-        this.loaded = false
-        this.error = result.errorCode ?? ''
+        this.status = NetworkComponentStatusList.Failed
+        if (result.errorCode) {
+          this.error = APIErrorList[result.errorCode]
+        }
       })
     }
   }

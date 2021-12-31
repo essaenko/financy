@@ -28,6 +28,8 @@ export class UserState implements UserModel {
     if (result.success) {
       await this.fetchUser()
     }
+
+    return result
   }
 
   async createUser(email: string, name: string, password: string) {

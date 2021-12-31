@@ -15,7 +15,7 @@ export const Header = observer((): JSX.Element => {
   }
   return (
     <div className={css.root}>
-      <Link to={'/dashboard'} className={css.logo}>
+      <Link to={'/dashboard/transaction'} className={css.logo}>
         Financy
       </Link>
       <span className={css.username}>

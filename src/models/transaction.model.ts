@@ -5,9 +5,11 @@ import { CategoryModel } from './category.model'
 import { UserModel } from './user.model'
 import { AccountModel } from './account.model'
 import {createTransaction, fetchTransactions, updateTransaction, removeTransaction} from "../api/api.transaction";
-import {APIParsedResponse} from "../api/api.handler";
+import {APIErrorList, APIParsedResponse, NetworkComponentStatusList} from "../api/api.handler";
+import {TransactionFilters} from "utils/class.utils";
 
 export enum TransactionTypeList {
+  All = "All",
   Income = 'Income',
   Outcome = 'Outcome',
 }
@@ -63,8 +65,10 @@ export class TransactionState implements TransactionModel{
 
 export class TransactionCollectionState {
   collection: TransactionState[] = [];
-  loaded: boolean = false;
-  loading: boolean = false;
+  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched;
+  total: number = 0;
+  elements: number = 0;
+  error: APIErrorList | null = null;
   page: number = 1;
 
   constructor() {
@@ -132,27 +136,35 @@ export class TransactionCollectionState {
     );
 
     if (result.success && result.payload) {
-      await this.fetchTransactions(this.page);
+      await this.fetchTransactions();
     }
 
     return result;
   }
 
-  async fetchTransactions(page: number = 1) {
+  async fetchTransactions(filters?: TransactionFilters) {
     runInAction(() => {
-      this.loaded = false;
-      this.loading = true;
-      this.page = page;
+      this.status = NetworkComponentStatusList.Loading;
+      this.page = filters?.page ?? this.page;
     })
 
-    const result = await fetchTransactions(page);
+    const result = await fetchTransactions(
+      filters?.page ?? this.page,
+      filters?.perPage ?? 20,
+      filters?.type,
+      filters?.category,
+      filters?.dateFrom,
+      filters?.dateTo,
+      filters?.date
+    );
 
     if (result.success && result.payload) {
       runInAction(() => {
-        this.loaded = true;
-        this.loading = false;
+        this.status = NetworkComponentStatusList.Loaded;
+        this.total = result.payload!.total;
+        this.elements = result.payload!.elements;
 
-        this.collection = result.payload!.map((transaction) => {
+        this.collection = result.payload!.list.map((transaction) => {
           const t = new TransactionState();
           t.setState(transaction);
 
@@ -161,8 +173,7 @@ export class TransactionCollectionState {
       })
     } else {
       runInAction(() => {
-        this.loading = false;
-        this.loaded = false
+        this.status = NetworkComponentStatusList.Failed;
       })
     }
 

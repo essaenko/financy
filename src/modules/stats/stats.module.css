@@ -1,0 +1,9 @@
+.root {
+  padding: 20px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+}

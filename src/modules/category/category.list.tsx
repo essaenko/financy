@@ -13,12 +13,13 @@ import {state} from "../../models";
 import {normalizeTree} from "utils/collection.utils";
 
 import css from 'modules/category/category.module.css'
+import {NetworkComponentStatusList} from "../../api/api.handler";
 
 export const CategoryList = observer((): JSX.Element => {
   const [tabState, setTabState] = useState<CategoryTypeList>(
     CategoryTypeList.Income
   )
-  const { collection, loading, loaded } = state.categories
+  const { collection, status } = state.categories
   const categories = useMemo(
     () =>
       normalizeTree<CategoryModel>(
@@ -70,11 +71,11 @@ export const CategoryList = observer((): JSX.Element => {
         </Link>
       </div>
       <div className={css.categoriesOwner}>
-        {loading && !loaded && (
+        {status === NetworkComponentStatusList.Loading && (
           <div className={css.loader}>Loading categories...</div>
         )}
-        {loaded && Object.values(categories).map(deepRender)}
-        {!loaded && !loading && (
+        {status === NetworkComponentStatusList.Loaded && Object.values(categories).map(deepRender)}
+        {status === NetworkComponentStatusList.Failed && (
           <div className={css.loader}>
             Some error occurred while fetching categories...
             <img
