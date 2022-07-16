@@ -1,9 +1,80 @@
 .root {
   padding: 20px;
+  overflow: hidden scroll;
+  width: 100%;
 
   .header {
     display: flex;
     align-items: center;
     padding-bottom: 20px;
+  }
+
+  .content {
+    h3 {
+      padding: 20px 0;
+    }
+    h4 {
+      padding: 15px 0;
+    }
+
+    .filters {
+      form {
+        display: flex;
+        align-items: center;
+
+        @media screen and (max-width: 400px) {
+          flex-direction: column;
+        }
+
+        input,
+        select {
+          height: 30px;
+        }
+
+        input[type='date'] {
+          min-width: 160px;
+        }
+
+        input, select {
+          margin: 0 5px;
+
+          @media screen and (max-width: 400px) {
+            margin: 5px 5px;
+          }
+        }
+
+        input:first-of-type {
+          margin-left: 0;
+        }
+
+        button {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .status {
+      text-align: center;
+
+      .error {
+        display: block;
+        margin: 20px auto;
+        color: var(--system-red);
+      }
+      .info {
+        display: block;
+        margin: 20px auto;
+        color: var(--system-gray);
+      }
+    }
+
+    .graphs {
+      display: flex;
+      margin-bottom: 10px;
+
+      @media screen and (max-width: 400px) {
+        flex-direction: column;
+      }
+    }
   }
 }

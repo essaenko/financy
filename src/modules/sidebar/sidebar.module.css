@@ -1,9 +1,22 @@
 .root {
   width: 260px;
   min-width: 260px;
-  border-right: 1px solid hsla(0,0%,83.1%,.6);
+  border-right: 1px solid hsla(0, 0%, 83.1%, 0.6);
   height: 100%;
   background-color: var(--system-mate-silver);
+  overflow: hidden;
+
+  @media screen and (max-width: 400px) {
+    width: 0;
+    min-width: 0;
+    transition: .3s ease-in-out;
+
+    &.opened {
+      width: 260px;
+      min-width: 260px;
+      transition: .3s ease-in-out;
+    }
+  }
 
   .link {
     height: 45px;
@@ -13,7 +26,6 @@
 
     &.activeLink {
       background-color: var(--system-silver);
-
 
       span {
         border-bottom: 0;

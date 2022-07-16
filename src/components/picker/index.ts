@@ -1,1 +1,1 @@
-export { Picker } from './picker'
+export { Picker } from './picker';

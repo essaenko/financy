@@ -1,4 +1,4 @@
-import {TransactionTypeList} from '../models/transaction.model'
+import { TransactionTypeList } from '../models/transaction.model';
 
 export enum DateIntervalList {
   Day = 'Day',
@@ -16,8 +16,8 @@ export class TransactionFilters {
   readonly perPage: number;
 
   constructor(
-    page: number = 1,
-    perPage: number = 20,
+    page = 1,
+    perPage = 20,
     type?: TransactionTypeList,
     category?: number,
     dateFrom?: number,

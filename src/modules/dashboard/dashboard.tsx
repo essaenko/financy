@@ -1,20 +1,25 @@
-import React from 'react'
-import { Route } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Route } from 'react-router-dom';
 
-import { DashboardAccount } from 'modules/dashboard/dashboard.account'
-import { DashboardContent } from 'modules/dashboard/dashboard.content'
-import { Header } from 'modules/header/header'
+import { DashboardAccount } from 'modules/dashboard/dashboard.account';
+import { DashboardContent } from 'modules/dashboard/dashboard.content';
+import { Header } from 'modules/header/header';
 
-import css from './dashboard.module.css'
+import css from './dashboard.module.css';
 
 export const Dashboard = (): JSX.Element => {
+  const [isSidebarOpened, setIsSidebarOpened] = useState(false);
+
   return (
     <div className={css.root}>
-      <Route path={'/dashboard'}>
-        <Header />
+      <Route path="/dashboard">
+        <Header onOpenSidebar={() => setIsSidebarOpened(true)} />
         <DashboardAccount />
-        <DashboardContent />
+        <DashboardContent
+          sidebarState={isSidebarOpened}
+          onCloseSidebar={() => setIsSidebarOpened(false)}
+        />
       </Route>
     </div>
-  )
-}
+  );
+};

@@ -1,42 +1,56 @@
-import React, {useEffect, useMemo, useState, MouseEvent, useCallback} from 'react'
-import {observer} from 'mobx-react-lite'
-import {Link, useHistory} from 'react-router-dom'
-import classnames from 'classnames'
-import {add} from 'date-fns';
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  MouseEvent,
+  useCallback,
+} from 'react';
+import { observer } from 'mobx-react-lite';
+import { Link, useHistory } from 'react-router-dom';
+import classnames from 'classnames';
 
-import {state} from '../../models'
-import {TransactionTypeList} from '../../models/transaction.model'
+import { TransactionItem } from 'modules/transaction/transaction.item';
+import { DateIntervalList, TransactionFilters } from 'utils/class.utils';
+import { Pager, Picker } from 'components';
+import { NetworkComponentStatusList } from 'api/api.handler';
+import { state } from 'models';
+import { TransactionTypeList } from 'models/transaction.model';
 
-import addIcon from 'static/icons/add.png'
-import glyph from 'static/icons/glyph.png'
-import {Pager, Picker} from "../../components";
-import { TransactionItem } from "modules/transaction/transaction.item";
-
-import {NetworkComponentStatusList} from "../../api/api.handler";
-import {DateIntervalList, TransactionFilters} from "utils/class.utils";
-
-import css from './transaction.module.css'
+import css from './transaction.module.css';
 
 export const TransactionList = observer((): JSX.Element => {
   const history = useHistory();
-  const query = useMemo(() => new URLSearchParams(history.location.search), [history.location.search]);
+  const query = useMemo(
+    () => new URLSearchParams(history.location.search),
+    [history.location.search],
+  );
   const today = useMemo(() => new Date(), []);
-  const { collection, status, total  } = state.transaction;
+  const {
+    transaction: { collection, status, total },
+    account,
+  } = state;
   const [type, setType] = useState<TransactionTypeList>(
-    TransactionTypeList[query.get('type') as keyof typeof TransactionTypeList] ?? TransactionTypeList.All
+    TransactionTypeList[
+      query.get('type') as keyof typeof TransactionTypeList
+    ] ?? TransactionTypeList.All,
   );
   const [dateInterval, setDateInterval] = useState<DateIntervalList>(
-    DateIntervalList[query.get('interval') as keyof typeof DateIntervalList] ?? DateIntervalList.Month
+    DateIntervalList[query.get('interval') as keyof typeof DateIntervalList] ??
+      DateIntervalList.Month,
   );
-  const [category, setCategory] = useState<number>(Number(query.get('category')) || 0);
-  const [dateFilter, setDateFilter] = useState<number | null>(Number(query.get('date')) || null);
+  const [category, setCategory] = useState<number>(
+    Number(query.get('category')) || 0,
+  );
+  const [dateFilter, setDateFilter] = useState<number | null>(
+    Number(query.get('date')) || null,
+  );
   const [page, setPage] = useState<number>(Number(query.get('page') || 1));
   const { collection: categories, status: categoriesStatus } = state.categories;
   const dateFilterValue = useMemo(() => {
     const date = new Date(dateFilter ?? Date.now());
 
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
-  }, [dateFilter])
+    return date.toISOString().slice(0, 10);
+  }, [dateFilter]);
 
   useEffect(() => {
     if (categoriesStatus === NetworkComponentStatusList.Untouched) {
@@ -45,23 +59,30 @@ export const TransactionList = observer((): JSX.Element => {
   }, [categoriesStatus]);
 
   useEffect(() => {
-    state.transaction.fetchTransactions(new TransactionFilters(
-      page,
-      void 0,
-      type,
-      category || void 0,
-      add(today, {
-        years: dateInterval === DateIntervalList.Year ? -1 : 0,
-        months: dateInterval === DateIntervalList.Month ? -1 : 0,
-      }).getTime(),
-      today.getTime(),
-      dateFilter ? +dateFilter || void 0 : void 0,
-    ));
-  }, [type, page, dateInterval, category, dateFilter])
+    state.transaction.fetchTransactions(
+      new TransactionFilters(
+        page,
+        void 0,
+        type,
+        category || void 0,
+        new Date(account.createdAt || '').getTime(),
+        today.getTime(),
+        dateFilter ? +dateFilter : void 0,
+      ),
+    );
+  }, [
+    type,
+    page,
+    dateInterval,
+    category,
+    dateFilter,
+    today,
+    account.createdAt,
+  ]);
 
   useEffect(() => {
     setPage(1);
-  }, [type])
+  }, [type]);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -70,19 +91,19 @@ export const TransactionList = observer((): JSX.Element => {
     params.append('interval', dateInterval);
     params.append('category', category.toString());
     if (dateFilter) {
-      params.append('date', dateFilter.toString())
+      params.append('date', dateFilter.toString());
     }
     history.push({
       search: params.toString(),
-    })
+    });
   }, [history, page, type, dateInterval, category, dateFilter]);
 
   const clearFilters = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+    event.preventDefault();
     setCategory(0);
     setDateInterval(DateIntervalList.Month);
-    setDateFilter(null)
-  }, [])
+    setDateFilter(null);
+  }, []);
 
   return (
     <div>
@@ -102,24 +123,28 @@ export const TransactionList = observer((): JSX.Element => {
             {
               id: TransactionTypeList.Outcome,
               text: TransactionTypeList.Outcome.toString(),
-            }
+            },
           ]}
           active={type}
-          onChange={(id) => () => setType(id)}
+          onChange={id => () => setType(id as TransactionTypeList)}
         />
-        <Link to={{
-          pathname: '/dashboard/transaction/create',
-          search: history.location.search,
-        }}>
-          <img src={addIcon} alt="Add transaction" className={css.icon} />
+        <Link
+          to={{
+            pathname: '/dashboard/transaction/create',
+            search: history.location.search,
+          }}
+        >
+          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
         </Link>
-        <div className={classnames(css.filters, {
-          [css.activeFilter]:
-            dateInterval !== DateIntervalList.Month ||
-            category !== 0 ||
-            dateFilter !== null
-        })}>
-          <img src={glyph} alt="Filters button"/>
+        <div
+          className={classnames(css.filters, {
+            [css.activeFilter]:
+              dateInterval !== DateIntervalList.Month ||
+              category !== 0 ||
+              dateFilter !== null,
+          })}
+        >
+          <i className={classnames(css.icon, 'fa', 'fa-filter')} />
           <div className={css.hiddenContent}>
             <Picker
               className={css.dateIntervalPicker}
@@ -135,35 +160,41 @@ export const TransactionList = observer((): JSX.Element => {
                 {
                   id: DateIntervalList.Year,
                   text: DateIntervalList.Year.toString(),
-                }
+                },
               ]}
               active={dateInterval}
-              onChange={(id) => () => setDateInterval(id)}
+              onChange={id => () => setDateInterval(id as DateIntervalList)}
             />
             <form>
               <select
                 value={category ?? 0}
-                onChange={(event) => setCategory(+event.currentTarget.value)}
+                onChange={event => setCategory(+event.currentTarget.value)}
               >
                 <option value={0} disabled key={0}>
                   Filter by category
                 </option>
                 {categories
-                  .filter((category) => type === TransactionTypeList.All || category.type!.valueOf() === type.valueOf())
-                  .map((category) => (
+                  .filter(
+                    category =>
+                      type === TransactionTypeList.All ||
+                      category.type?.valueOf() === type.valueOf(),
+                  )
+                  .map(category => (
                     <option value={category.id} key={category.id}>
-                      {category.name}{category.parent && (` (${category.parent.name})`)}
+                      {category.name}
+                      {category.parent && ` (${category.parent.name})`}
                     </option>
                   ))}
               </select>
               <input
                 type="date"
-                placeholder={'From date'}
-                defaultValue={dateFilterValue}
-                onChange={(event) =>
-                  setDateFilter((new Date(event.currentTarget.value)).getTime())}
+                placeholder="From date"
+                onChange={event =>
+                  setDateFilter(new Date(event.currentTarget.value).getTime())
+                }
+                value={dateFilterValue}
               />
-              <button className={'flat'} onClick={clearFilters}>
+              <button className="flat" onClick={clearFilters}>
                 Clear
               </button>
             </form>
@@ -171,15 +202,16 @@ export const TransactionList = observer((): JSX.Element => {
         </div>
       </div>
       <div className={css.content}>
-        {status === NetworkComponentStatusList.Loaded && collection.length === 0 && (
-          <div className={css.info}>No transactions was found...</div>
-        )}
-        {status === NetworkComponentStatusList.Loading && !collection.length && <div className={css.info}>Loading transactions...</div>}
-        {collection.map((transaction) => (
-          <TransactionItem
-            key={transaction.id}
-            transaction={transaction}
-          />
+        {status === NetworkComponentStatusList.Loaded &&
+          collection.length === 0 && (
+            <div className={css.info}>No transactions was found...</div>
+          )}
+        {status === NetworkComponentStatusList.Loading &&
+          !collection.length && (
+            <div className={css.info}>Loading transactions...</div>
+          )}
+        {collection.map(transaction => (
+          <TransactionItem key={transaction.id} transaction={transaction} />
         ))}
         <Link
           to={{
@@ -193,10 +225,10 @@ export const TransactionList = observer((): JSX.Element => {
           <Pager
             page={page}
             count={Math.ceil(total / 20)}
-            onChange={(page: number) => setPage(page)}
+            onChange={(p: number) => setPage(p)}
           />
         </div>
       </div>
     </div>
-  )
-})
+  );
+});

@@ -1,17 +1,17 @@
-import React from 'react'
-import classnames from 'classnames'
+import React from 'react';
+import classnames from 'classnames';
 
-import css from './picker.module.css'
+import css from './picker.module.css';
 
 export type PropsType = {
   elements: {
-    id: string | number,
-    text: string,
-  }[],
-  active: string | number,
-  onChange: (id: any) => () => void,
-  className?: string,
-}
+    id: string | number;
+    text: string;
+  }[];
+  active: string | number;
+  onChange: (id: string | number) => () => void;
+  className?: string;
+};
 
 export const Picker = ({
   elements,
@@ -21,7 +21,7 @@ export const Picker = ({
 }: PropsType): JSX.Element => {
   return (
     <div className={classnames(css.root, className)}>
-      {elements.map((tab) => (
+      {elements.map(tab => (
         <div
           key={tab.id}
           className={classnames(css.tab, {
@@ -33,5 +33,5 @@ export const Picker = ({
         </div>
       ))}
     </div>
-  )
-}
+  );
+};

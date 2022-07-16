@@ -1,16 +1,24 @@
-import { makeAutoObservable, runInAction } from 'mobx'
-import {AccountModel} from "./account.model";
-import {createPaymentMethod, fetchPaymentMethods, removePaymentMethod, updatePaymentMethod} from "../api/api.payment";
-import {APIParsedResponse, NetworkComponentStatusList} from "../api/api.handler";
+import { makeAutoObservable, runInAction } from 'mobx';
+import { AccountModel } from './account.model';
+import {
+  createPaymentMethod,
+  fetchPaymentMethods,
+  removePaymentMethod,
+  updatePaymentMethod,
+} from '../api/api.payment';
+import {
+  APIParsedResponse,
+  NetworkComponentStatusList,
+} from '../api/api.handler';
 
 export interface PaymentMethodModel {
-  id: number | undefined
-  account: AccountModel | undefined,
-  name: string | undefined,
-  description: string | undefined,
-  remains: number | undefined,
-  createdAt: string | undefined,
-  updatedAt: string | undefined,
+  id: number | undefined;
+  account: AccountModel | undefined;
+  name: string | undefined;
+  description: string | undefined;
+  remains: number | undefined;
+  createdAt: string | undefined;
+  updatedAt: string | undefined;
 }
 
 export class PaymentMethodState implements PaymentMethodModel {
@@ -27,19 +35,19 @@ export class PaymentMethodState implements PaymentMethodModel {
   }
 
   setState(payment: PaymentMethodModel) {
-    this.id = payment.id
-    this.account = payment.account
-    this.name = payment.name
-    this.description = payment.description
-    this.remains = payment.remains
-    this.createdAt = payment.createdAt
-    this.updatedAt = payment.updatedAt
+    this.id = payment.id;
+    this.account = payment.account;
+    this.name = payment.name;
+    this.description = payment.description;
+    this.remains = payment.remains;
+    this.createdAt = payment.createdAt;
+    this.updatedAt = payment.updatedAt;
   }
 }
 
 export class PaymentMethodCollectionState {
   collection: PaymentMethodState[] = [];
-  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched
+  status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched;
 
   constructor() {
     makeAutoObservable(this);
@@ -50,16 +58,18 @@ export class PaymentMethodCollectionState {
 
     if (result.success) {
       runInAction(() => {
-        this.collection = this.collection.filter((p) => p.id !== id);
+        this.collection = this.collection.filter(p => p.id !== id);
       });
     }
 
     return result;
   }
 
-  async createPayment(name: string, description: string, remains: number):
-    Promise<APIParsedResponse<PaymentMethodModel>>
-  {
+  async createPayment(
+    name: string,
+    description: string,
+    remains: number,
+  ): Promise<APIParsedResponse<PaymentMethodModel>> {
     const result = await createPaymentMethod(name, description, remains);
 
     if (result.success && result.payload) {
@@ -69,21 +79,28 @@ export class PaymentMethodCollectionState {
     return result;
   }
 
-  async updatePayment(id: number, name: string, description: string, remains: number):
-    Promise<APIParsedResponse<PaymentMethodModel>>
-  {
+  async updatePayment(
+    id: number,
+    name: string,
+    description: string,
+    remains: number,
+  ): Promise<APIParsedResponse<PaymentMethodModel>> {
     const result = await updatePaymentMethod(id, name, description, remains);
 
-    if (result.success && result.payload) {
+    if (result.success) {
       runInAction(() => {
-        this.collection.find((p) => p.id === id)?.setState(result.payload!);
-      })
+        if (result.payload) {
+          this.collection.find(p => p.id === id)?.setState(result.payload);
+        }
+      });
     }
 
     return result;
   }
 
-  async fetchPaymentMethods(): Promise<APIParsedResponse<PaymentMethodModel[]>> {
+  async fetchPaymentMethods(): Promise<
+    APIParsedResponse<PaymentMethodModel[]>
+  > {
     runInAction(() => {
       this.status = NetworkComponentStatusList.Loading;
     });
@@ -92,22 +109,23 @@ export class PaymentMethodCollectionState {
 
     if (result.success && result.payload) {
       runInAction(() => {
-        this.status = NetworkComponentStatusList.Loaded
-        this.collection = result.payload?.map((payment) => {
-          const instance = new PaymentMethodState();
-          instance.setState(payment);
+        this.status = NetworkComponentStatusList.Loaded;
+        this.collection =
+          result.payload?.map(payment => {
+            const instance = new PaymentMethodState();
+            instance.setState(payment);
 
-          return instance;
-        }) || [];
+            return instance;
+          }) || [];
       });
 
-      return result
-    } else {
-      runInAction(() => {
-        this.status = NetworkComponentStatusList.Failed
-      });
-
-      return result
+      return result;
     }
+
+    runInAction(() => {
+      this.status = NetworkComponentStatusList.Failed;
+    });
+
+    return result;
   }
 }

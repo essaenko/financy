@@ -1,34 +1,64 @@
-import React, { MouseEvent, useCallback, useEffect } from 'react'
-import { observer } from 'mobx-react-lite'
-import classnames from 'classnames'
-import { useHistory } from 'react-router-dom'
+import React, { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import classnames from 'classnames';
+import { Link, useHistory } from 'react-router-dom';
 
-import { state } from '../../models'
-import { APIErrorList, NetworkComponentStatusList } from '../../api/api.handler'
+import { state } from '../../models';
+import {
+  APIErrorList,
+  NetworkComponentStatusList,
+} from '../../api/api.handler';
 
-import css from './dashboard.module.css'
+import css from './dashboard.module.css';
+
+enum FormTypeList {
+  CreateAccount,
+  JoinFamily,
+}
 
 export const DashboardAccount = observer((): JSX.Element => {
-  const { status, id, error } = state.account
-  const history = useHistory()
+  const { status, error } = state.account;
+  const { collection: fRequests, status: fRequestStatus } = state.family;
+  const history = useHistory();
+  const [formType, setFormType] = useState<FormTypeList>(
+    FormTypeList.CreateAccount,
+  );
+  const [email, setEmail] = useState<string>('');
+
   useEffect(() => {
-    if (id === void 0) {
-      state.account.fetchAccount()
+    if (status === NetworkComponentStatusList.Untouched) {
+      state.account.fetchAccount();
     }
-  }, [id])
+    if (fRequestStatus === NetworkComponentStatusList.Untouched) {
+      state.family.fetchFamilyRequest();
+    }
+  }, [fRequestStatus, status]);
 
-  const onClick = useCallback(
+  const onEmailEnter = useCallback(event => {
+    setEmail(event.target.value);
+  }, []);
+
+  const onCreateNewAccount = useCallback(
     async (event: MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault()
+      event.preventDefault();
 
-      const result = await state.account.createAccount()
+      const result = await state.account.createAccount();
 
       if (result.success) {
-        history.push('/dashboard/family')
+        history.push('/dashboard/family');
       }
     },
-    [history]
-  )
+    [history],
+  );
+
+  const onJoinFamily = useCallback(
+    event => {
+      event.preventDefault();
+
+      state.family.createFamilyRequest(email);
+    },
+    [email],
+  );
 
   return (
     <div
@@ -42,9 +72,53 @@ export const DashboardAccount = observer((): JSX.Element => {
             No account found. <br />
             You can create your own account, or join <br /> your family with
             existed account
-            <button onClick={onClick}>Create my own account</button>
+            {fRequests.length === 0 && (
+              <>
+                {formType === FormTypeList.CreateAccount && (
+                  <button onClick={onCreateNewAccount}>
+                    Create my own account
+                  </button>
+                )}
+                {formType === FormTypeList.JoinFamily && (
+                  <div className={css.joinForm}>
+                    <input
+                      type="email"
+                      placeholder="E-mail"
+                      value={email}
+                      onChange={onEmailEnter}
+                    />
+                    <button onClick={onJoinFamily}>Join</button>
+                  </div>
+                )}
+                <Link
+                  to="/dashboard"
+                  onClick={event => {
+                    event.preventDefault();
+
+                    setFormType(
+                      formType === FormTypeList.CreateAccount
+                        ? FormTypeList.JoinFamily
+                        : FormTypeList.CreateAccount,
+                    );
+                  }}
+                >
+                  {formType === FormTypeList.CreateAccount
+                    ? 'Join family'
+                    : 'Create new account'}
+                </Link>
+              </>
+            )}
+            {fRequests.length > 0 && (
+              <>
+                <br />
+                <br />
+                Awaiting request approve <br />
+                Request to {fRequests[0].owner} -{' '}
+                {fRequests[0].isActive ? 'Awaiting' : 'Rejected'}
+              </>
+            )}
           </form>
         )}
     </div>
-  )
-})
+  );
+});

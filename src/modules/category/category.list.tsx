@@ -1,48 +1,52 @@
-import React, {useCallback, useMemo, useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {Link} from "react-router-dom";
-import classnames from "classnames";
+import React, { useCallback, useMemo, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 
-import {Picker} from 'components/picker'
-import add from 'static/icons/add.png'
-import refresh from 'static/icons/refresh.png'
+import { Picker } from 'components/picker';
 
-import {CategoryModel, CategoryTypeList} from 'models/category.model'
-import {state} from "../../models";
+import { CategoryModel, CategoryTypeList } from 'models/category.model';
 
-import {normalizeTree} from "utils/collection.utils";
+import { normalizeTree, TreeNode } from 'utils/collection.utils';
 
-import css from 'modules/category/category.module.css'
-import {NetworkComponentStatusList} from "../../api/api.handler";
+import css from 'modules/category/category.module.css';
+import { state } from '../../models';
+import { NetworkComponentStatusList } from '../../api/api.handler';
 
 export const CategoryList = observer((): JSX.Element => {
   const [tabState, setTabState] = useState<CategoryTypeList>(
-    CategoryTypeList.Income
-  )
-  const { collection, status } = state.categories
+    CategoryTypeList.Income,
+  );
+  const { collection, status } = state.categories;
   const categories = useMemo(
     () =>
       normalizeTree<CategoryModel>(
-        collection.filter((category) => tabState === CategoryTypeList.All || category.type === tabState)
+        collection.filter(
+          category =>
+            tabState === CategoryTypeList.All || category.type === tabState,
+        ),
       ),
-    [collection, tabState]
-  )
+    [collection, tabState],
+  );
 
-  const onChangeCategoryType = (type: keyof typeof CategoryTypeList) => () => {
-    setTabState(CategoryTypeList[type])
-  }
+  const onChangeCategoryType = (type: string | number) => () => {
+    setTabState(CategoryTypeList[type as keyof typeof CategoryTypeList]);
+  };
 
-  const deepRender = (node: any): JSX.Element => (
-    <div key={node.id} className={classnames(css.deepNode, {
-      [css.parentNode]: !!node.children
-    })}>
+  const deepRender = (node: TreeNode & { name?: string }): JSX.Element => (
+    <div
+      key={node.id}
+      className={classnames(css.deepNode, {
+        [css.parentNode]: !!node.children,
+      })}
+    >
       {node.name}
       {node.children && <>{Object.values(node.children).map(deepRender)}</>}
     </div>
-  )
+  );
   const refreshList = useCallback(() => {
-    state.categories.fetchCategories()
-  }, [])
+    state.categories.fetchCategories();
+  }, []);
   return (
     <>
       <div className={css.header}>
@@ -66,27 +70,26 @@ export const CategoryList = observer((): JSX.Element => {
             },
           ]}
         />
-        <Link to={'/dashboard/category/create'}>
-          <img className={css.iconLink} src={add} alt={'New categoty'} />
+        <Link to="/dashboard/category/create">
+          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
         </Link>
       </div>
       <div className={css.categoriesOwner}>
         {status === NetworkComponentStatusList.Loading && (
           <div className={css.loader}>Loading categories...</div>
         )}
-        {status === NetworkComponentStatusList.Loaded && Object.values(categories).map(deepRender)}
+        {status === NetworkComponentStatusList.Loaded &&
+          Object.values(categories).map(deepRender)}
         {status === NetworkComponentStatusList.Failed && (
           <div className={css.loader}>
             Some error occurred while fetching categories...
-            <img
-              className={css.icon}
-              src={refresh}
+            <span
+              className={classnames(css.icon, 'fa', 'fa-arrow-rotate-right')}
               onClick={refreshList}
-              alt={'Refresh'}
             />
           </div>
         )}
       </div>
     </>
-  )
-})
+  );
+});

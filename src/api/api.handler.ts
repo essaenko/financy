@@ -1,6 +1,6 @@
-import {api} from "./api.transport";
+import { api } from './api.transport';
 
-export interface APIParsedResponse<T = any> {
+export interface APIParsedResponse<T = unknown> {
   success?: true;
   error?: true;
   payload?: T;
@@ -8,16 +8,16 @@ export interface APIParsedResponse<T = any> {
 }
 
 export interface CollectionResponse<T> {
-  total: number,
-  elements: number,
-  list: T,
+  total: number;
+  elements: number;
+  list: T;
 }
 
 export enum NetworkComponentStatusList {
   Untouched,
   Loading,
   Loaded,
-  Failed
+  Failed,
 }
 
 export enum APIResponseStatusList {
@@ -39,48 +39,64 @@ export interface APIResponse<T> {
   payload?: T;
 }
 
-export const requestHandler = async <T = any>(
-  request: Promise<Response>
+const parseResponse = async <T>(
+  response: Response,
 ): Promise<APIParsedResponse<T>> => {
-  const response = await request;
-  if (response.status !== 200) {
-    if (response.status === 401) {
-      api.removeToken();
-
-      return {
-        error: true,
-        errorCode: APIErrorList.UnauthorizedException,
-      }
-    }
-
-    return {
-      error: true,
-      errorCode: APIErrorList.UserNotFountException,
-    }
-  }
-
-  return parseResponse(response);
-}
-
-const parseResponse = async <T>(response: Response): Promise<APIParsedResponse<T>> => {
   try {
-    const json: APIResponse<T> = await response.json()
+    const json: APIResponse<T> = await response.json();
 
     if (json.status === APIResponseStatusList.Error) {
       return {
         error: true,
-        errorCode: APIErrorList[json.error!!],
-      }
+        errorCode: APIErrorList[json.error as APIErrorList],
+      };
     }
 
     return {
       success: true,
       payload: json.payload,
-    }
+    };
   } catch (e) {
     return {
       error: true,
       errorCode: APIErrorList.InvalidResponseException,
-    }
+    };
   }
-}
+};
+
+export const requestHandler = async <T extends unknown>(
+  request: Promise<Response>,
+): Promise<APIParsedResponse<T>> => {
+  try {
+    const response = await request;
+    if (response.status !== 200) {
+      if (response.status === 401) {
+        api.removeToken();
+
+        return {
+          error: true,
+          errorCode: APIErrorList.UnauthorizedException,
+        };
+      }
+
+      if (response.status === 404) {
+        return {
+          error: true,
+          errorCode: APIErrorList.ServiceUnreachableException,
+        };
+      }
+
+      return {
+        error: true,
+        errorCode: APIErrorList.UserNotFountException,
+      };
+    }
+
+    return parseResponse(response);
+  } catch (e) {
+    return {
+      error: true,
+      errorCode: APIErrorList.ServiceUnreachableException,
+    };
+  }
+};

@@ -1,3 +1,5 @@
+@import "~font-awesome/css/font-awesome.css";
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -9,12 +11,26 @@ html {
   height: 100%;
 }
 
+.fa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+
+  &:before {
+    color: inherit;
+  }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
-h2, h3 {
+h2,
+h3,
+h4 {
   font-weight: 300;
 }
 h2 {
@@ -28,7 +44,15 @@ h3 {
   line-height: 30px;
 }
 
-h1, h2, h3 {
+h4 {
+  font-size: 17px;
+  line-height: 23px;
+}
+
+h1,
+h2,
+h3,
+h4 {
   margin: 0;
   padding: 0;
 }
@@ -46,7 +70,7 @@ a {
   height: 100%;
 }
 
-input[type=date] {
+input[type='date'] {
   display: block;
   border-color: var(--system-silver);
   padding: 2px 8px;
@@ -57,8 +81,8 @@ input[type=date] {
   border-style: solid;
   outline: none;
   box-sizing: border-box;
-  -webkit-appearance:none;
-  font-family: system-ui,-apple-system,BlinkMacSystemFont;
+  -webkit-appearance: none;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
 
   &:focus {
     border-color: var(--system-blue);
@@ -72,7 +96,8 @@ img {
 }
 
 form {
-  input, select {
+  input,
+  select {
     width: 100%;
     display: block;
     border-color: var(--system-silver);
@@ -84,7 +109,7 @@ form {
     border-style: solid;
     outline: none;
     box-sizing: border-box;
-    -webkit-appearance:none;
+    -webkit-appearance: none;
 
     &:focus {
       border-color: var(--system-blue);
@@ -92,7 +117,8 @@ form {
       border-radius: 2px;
     }
 
-    & + input, & + select {
+    & + input,
+    & + select {
       margin-top: 10px;
     }
 
@@ -109,7 +135,7 @@ form {
     border: 1px solid #07c;
     border-radius: 4px;
     font-weight: 400;
-    background: linear-gradient(#42a1ec,#0070c9);
+    background: linear-gradient(#42a1ec, #0070c9);
     color: var(--system-white);
     width: auto;
 
@@ -118,17 +144,17 @@ form {
       border: 0;
       width: 100%;
       color: var(--system-black);
-      transition: .2s;
+      transition: 0.2s;
 
       &:hover {
         background: var(--system-aluminium);
-        transition: .2s;
+        transition: 0.2s;
       }
     }
 
     &:hover {
       cursor: pointer;
-      background: linear-gradient(#51a9ee,#147bcd);
+      background: linear-gradient(#51a9ee, #147bcd);
     }
   }
 }

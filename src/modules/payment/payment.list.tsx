@@ -1,23 +1,21 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { observer } from 'mobx-react-lite'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
-import { state } from '../../models'
-
-import add from 'static/icons/add.png'
-
-import css from 'modules/payment/payment.module.css'
-import { NetworkComponentStatusList } from '../../api/api.handler'
+import css from 'modules/payment/payment.module.css';
+import classnames from 'classnames';
+import { state } from '../../models';
+import { NetworkComponentStatusList } from '../../api/api.handler';
 
 export const PaymentList = observer(() => {
-  const { collection, status } = state.payment
+  const { collection, status } = state.payment;
 
   return (
     <>
       <div className={css.header}>
         <h2>Payment methods</h2>
-        <Link to={'/dashboard/payment/create'}>
-          <img src={add} className={css.icon} alt="New payment method" />
+        <Link to="/dashboard/payment/create">
+          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
         </Link>
       </div>
       <div className={css.content}>
@@ -33,12 +31,12 @@ export const PaymentList = observer(() => {
               No payment methods found...
               <br />
               <br />
-              <Link to={'/dashboard/payment/create'}>Create first one</Link>
+              <Link to="/dashboard/payment/create">Create first one</Link>
             </div>
           )}
         {collection.length > 0 && (
           <div className={css.paymentCollection}>
-            {collection.map((payment) => {
+            {collection.map(payment => {
               return (
                 <Link
                   to={`/dashboard/payment/edit/${payment.id}`}
@@ -56,11 +54,11 @@ export const PaymentList = observer(() => {
                     {payment.account?.owner?.name}
                   </div>
                 </Link>
-              )
+              );
             })}
           </div>
         )}
       </div>
     </>
-  )
-})
+  );
+});

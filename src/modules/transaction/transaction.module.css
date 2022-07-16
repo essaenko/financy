@@ -1,7 +1,7 @@
 .root {
   padding: 20px;
   width: 100%;
-  overflow: scroll;
+  overflow: hidden scroll;
 
   .header {
     display: flex;
@@ -10,46 +10,40 @@
     position: relative;
 
     .filters {
-      position: absolute;
       display: flex;
       flex-direction: column;
       align-items: center;
-      left: 455px;
-      top: -8px;
-      padding: 10px;
 
       &:hover {
         .hiddenContent {
           opacity: 1;
           transform: scale(1);
-          transition: transform, opacity .2s;
+          transition: transform, opacity 0.2s;
           z-index: 1;
         }
       }
 
       &.activeFilter {
-        img {
+        i {
           background-color: var(--system-mate-silver);
         }
       }
 
       .hiddenContent {
         position: absolute;
-        top: calc(100% - 5px);
+        top: calc(100% - 25px);
         background-color: var(--system-light-gray);
         z-index: -1;
         padding: 15px;
         border-radius: 4px;
         opacity: 0;
         transform: scale(0.9);
-        transition: all .2s;
+        transition: all 0.2s;
       }
 
-      img {
-        width: var(--defaultIconWidth);
-        height: var(--defaultIconHeight);
+      i {
+        color: var(--system-black);
         cursor: pointer;
-        padding: 5px;
         border-radius: 4px;
       }
 
@@ -151,6 +145,13 @@
     .comment {
       margin-top: 10px;
       font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+
+      span {
+        display: block;
+        margin-left: auto;
+      }
     }
 
     &.transfer {
@@ -173,14 +174,18 @@
   }
 
   .icon {
-    width: var(--defaultIconWidth);
-    height: var(--defaultIconHeight);
+    color: var(--system-black);
     cursor: pointer;
+    margin-right: 10px;
   }
 
   .content {
     padding-bottom: 20px;
     position: relative;
+
+    @media screen and (max-width: 400px) {
+      padding-bottom: 75px;
+    }
 
     .info {
       color: var(--system-light-text);
@@ -191,7 +196,7 @@
       display: block;
 
       &:hover {
-       text-decoration: underline;
+        text-decoration: underline;
       }
     }
 
@@ -204,7 +209,12 @@
       right: 0;
       background-color: var(--system-opacied-white);
       backdrop-filter: blur(0.4rem);
+
+      @media screen and (max-width: 400px) {
+        left: 0;
+        height: 40px;
+        bottom: 45px;
+      }
     }
   }
-
 }

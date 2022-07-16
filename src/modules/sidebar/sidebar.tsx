@@ -1,46 +1,57 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-import css from './sidebar.module.css'
+import classnames from 'classnames';
+import css from './sidebar.module.css';
 
-export const Sidebar = (): JSX.Element => {
+type Props = {
+  state: boolean;
+  onClose: () => void;
+};
+
+export const Sidebar = ({ state, onClose }: Props): JSX.Element => {
   return (
-    <div className={css.root}>
+    <div
+      onClick={onClose}
+      className={classnames(css.root, {
+        [css.opened]: state,
+      })}
+    >
       <NavLink
-        to={'/dashboard/transaction'}
+        to="/dashboard/transaction"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Transactions</span>
       </NavLink>
       <NavLink
-        to={'/dashboard/stats'}
+        to="/dashboard/stats"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Statistics</span>
       </NavLink>
       <NavLink
-        to={'/dashboard/payment'}
+        to="/dashboard/payment"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Payment methods</span>
       </NavLink>
       <NavLink
-        to={'/dashboard/category'}
+        to="/dashboard/category"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Categories</span>
       </NavLink>
       <NavLink
-        to={'/dashboard/family'}
+        to="/dashboard/family"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Family</span>
       </NavLink>
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,8 @@
 .root {
   padding: 20px;
 
-  h2, h3 {
+  h2,
+  h3 {
     font-weight: 300;
     padding-bottom: 20px;
   }
@@ -22,6 +23,14 @@
 
   .ownerData {
     margin-bottom: 10px;
+  }
+
+  .pendingRequests {
+    .pendingRequest {
+      .rejectRequest {
+        color: var(--system-red)
+      }
+    }
   }
 
   .emptyList {

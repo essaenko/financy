@@ -5,14 +5,13 @@ import React, {
   useState,
   MouseEvent,
   useEffect,
-} from 'react'
-import { observer } from 'mobx-react-lite'
-import { Link, useHistory } from 'react-router-dom'
-import classnames from 'classnames'
+} from 'react';
+import { observer } from 'mobx-react-lite';
+import { Link, useHistory } from 'react-router-dom';
+import classnames from 'classnames';
 
-import { UserState } from '../../models/user.model'
-
-import css from 'modules/auth/auth.module.css'
+import css from 'modules/auth/auth.module.css';
+import { UserState } from '../../models/user.model';
 
 enum FormStateList {
   Ok,
@@ -22,65 +21,64 @@ enum FormStateList {
 }
 
 type PropsType = {
-  user: UserState,
-}
+  user: UserState;
+};
 
 export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
-  const [email, setEmail] = useState<string>('')
-  const [name, setName] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [passwordCopy, setPasswordCopy] = useState<string>('')
-  const [formState, setFormState] = useState<FormStateList>(FormStateList.Ok)
+  const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [passwordCopy, setPasswordCopy] = useState<string>('');
+  const [formState, setFormState] = useState<FormStateList>(FormStateList.Ok);
 
-  const history = useHistory()
+  const history = useHistory();
 
   useEffect(() => {
     if (user.email === void 0) {
-      user.fetchUser()
+      user.fetchUser();
     }
-  }, [user])
+  }, [user]);
 
   useEffect(() => {
     if (user.email !== void 0) {
-      history.push('/dashboard')
+      history.push('/dashboard');
     }
-  }, [history, user.email])
+  }, [history, user.email]);
 
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>
     ({ target }: ChangeEvent<HTMLInputElement>) => {
-      setter(target.value)
-    }
+      setter(target.value);
+    };
 
   const onSubmit = (event: MouseEvent) => {
-    event.preventDefault()
-    let hasError: boolean = false
+    event.preventDefault();
+    let hasError: boolean = false;
 
     if (
       !email.includes('@') ||
       email.split('@')[0].length < 2 ||
       email.split('@')[1].length < 3
     ) {
-      console.log(email.includes('@'), email.split('@')[0], email.split('@')[1])
-      setFormState(FormStateList.InvalidEmail)
-      hasError = true
+      setFormState(FormStateList.InvalidEmail);
+      hasError = true;
     }
 
     if (name.length < 2) {
-      setFormState(FormStateList.InvalidName)
-      hasError = true
+      setFormState(FormStateList.InvalidName);
+      hasError = true;
     }
 
     if (password !== passwordCopy) {
-      setFormState(FormStateList.InvalidPassword)
-      hasError = true
+      setFormState(FormStateList.InvalidPassword);
+      hasError = true;
     }
 
     if (!hasError) {
-      setFormState(FormStateList.Ok)
-      user.createUser(email, name, password)
+      setFormState(FormStateList.Ok);
+      user.createUser(email, name, password);
     }
-  }
+  };
 
   return (
     <div className={css.registration}>
@@ -88,7 +86,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         <h2>Registration</h2>
         <input
           type="text"
-          placeholder={'Full name'}
+          placeholder="Full name"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidName,
           })}
@@ -97,7 +95,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="email"
-          placeholder={'E-mail'}
+          placeholder="E-mail"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidEmail,
           })}
@@ -106,7 +104,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="password"
-          placeholder={'Password'}
+          placeholder="Password"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidPassword,
           })}
@@ -115,7 +113,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="password"
-          placeholder={'Repeat password'}
+          placeholder="Repeat password"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidPassword,
           })}
@@ -127,10 +125,10 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
             Done
           </button>
         </div>
-        <Link to={'/'} className={css.link}>
+        <Link to="/" className={css.link}>
           Already have account
         </Link>
       </form>
     </div>
-  )
-})
+  );
+});

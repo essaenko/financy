@@ -1,10 +1,10 @@
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-import { Auth } from 'modules/auth'
-import { Dashboard } from 'modules/dashboard'
+import { Auth } from 'modules/auth';
+import { Dashboard } from 'modules/dashboard';
 
-import css from './app.module.css'
+import css from './app.module.css';
 
 export const App = (): JSX.Element => {
   return (
@@ -14,5 +14,5 @@ export const App = (): JSX.Element => {
         <Dashboard />
       </BrowserRouter>
     </div>
-  )
-}
+  );
+};

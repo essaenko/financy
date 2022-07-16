@@ -1,15 +1,24 @@
-import {makeAutoObservable, runInAction} from "mobx";
+import { makeAutoObservable, runInAction } from 'mobx';
 
-import { PaymentMethodModel } from './payment.model'
-import { CategoryModel } from './category.model'
-import { UserModel } from './user.model'
-import { AccountModel } from './account.model'
-import {createTransaction, fetchTransactions, updateTransaction, removeTransaction} from "../api/api.transaction";
-import {APIErrorList, APIParsedResponse, NetworkComponentStatusList} from "../api/api.handler";
-import {TransactionFilters} from "utils/class.utils";
+import { TransactionFilters } from 'utils/class.utils';
+import { PaymentMethodModel } from './payment.model';
+import { CategoryModel } from './category.model';
+import { UserModel } from './user.model';
+import { AccountModel } from './account.model';
+import {
+  createTransaction,
+  fetchTransactions,
+  updateTransaction,
+  removeTransaction,
+} from '../api/api.transaction';
+import {
+  APIErrorList,
+  APIParsedResponse,
+  NetworkComponentStatusList,
+} from '../api/api.handler';
 
 export enum TransactionTypeList {
-  All = "All",
+  All = 'All',
   Income = 'Income',
   Outcome = 'Outcome',
 }
@@ -29,7 +38,7 @@ export interface TransactionModel {
   updatedAt?: string | undefined;
 }
 
-export class TransactionState implements TransactionModel{
+export class TransactionState implements TransactionModel {
   id: number | undefined;
   account: AccountModel | undefined;
   user: UserModel | undefined;
@@ -44,7 +53,7 @@ export class TransactionState implements TransactionModel{
   updatedAt?: string | undefined;
 
   constructor() {
-    makeAutoObservable(this)
+    makeAutoObservable(this);
   }
 
   setState(transaction: TransactionModel) {
@@ -75,14 +84,12 @@ export class TransactionCollectionState {
     makeAutoObservable(this);
   }
 
-  async removeTransaction(
-    id: number,
-  ): Promise<APIParsedResponse<void>> {
+  async removeTransaction(id: number): Promise<APIParsedResponse<void>> {
     const result = await removeTransaction(id);
 
     if (result.success) {
       runInAction(() => {
-        this.collection = this.collection.filter((t) => t.id !== id);
+        this.collection = this.collection.filter(t => t.id !== id);
       });
     }
 
@@ -108,10 +115,12 @@ export class TransactionCollectionState {
       to,
     );
 
-    if (result.success && result.payload) {
+    if (result.success) {
       runInAction(() => {
-        this.collection.find((t) => t.id === id)?.setState(result.payload!);
-      })
+        if (result.payload) {
+          this.collection.find(t => t.id === id)?.setState(result.payload);
+        }
+      });
     }
 
     return result;
@@ -146,7 +155,7 @@ export class TransactionCollectionState {
     runInAction(() => {
       this.status = NetworkComponentStatusList.Loading;
       this.page = filters?.page ?? this.page;
-    })
+    });
 
     const result = await fetchTransactions(
       filters?.page ?? this.page,
@@ -155,28 +164,32 @@ export class TransactionCollectionState {
       filters?.category,
       filters?.dateFrom,
       filters?.dateTo,
-      filters?.date
+      filters?.date,
     );
 
     if (result.success && result.payload) {
       runInAction(() => {
         this.status = NetworkComponentStatusList.Loaded;
-        this.total = result.payload!.total;
-        this.elements = result.payload!.elements;
+        if (result?.payload) {
+          this.total = result.payload.total;
+          this.elements = result.payload.elements;
+        }
 
-        this.collection = result.payload!.list.map((transaction) => {
-          const t = new TransactionState();
-          t.setState(transaction);
+        if (result.payload) {
+          this.collection = result.payload.list.map(transaction => {
+            const t = new TransactionState();
+            t.setState(transaction);
 
-          return t;
-        });
-      })
+            return t;
+          });
+        }
+      });
     } else {
       runInAction(() => {
         this.status = NetworkComponentStatusList.Failed;
-      })
+      });
     }
 
-    return result
+    return result;
   }
 }

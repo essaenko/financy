@@ -1,19 +1,41 @@
-import React, { useEffect, useMemo } from 'react'
-import { observer } from 'mobx-react-lite'
+import React, { useCallback, useEffect, MouseEvent } from 'react';
+import { Link } from 'react-router-dom';
 
-import { state } from '../../models'
+import { observer } from 'mobx-react-lite';
 
-import css from './account.module.css'
+import { state } from 'models';
+
+import css from './account.module.css';
+import { FamilyRequestState } from '../../models/familyrequest.model';
 
 export const Account = observer((): JSX.Element => {
-  const { users } = state.account
+  const { users } = state.account;
+  const { collection: fRequests } = state.family;
   useEffect(() => {
-    state.account.fetchAccountUsers()
-  }, [])
-  const familyUsers = useMemo(
-    () => users.filter((user) => user.id !== state.user.id),
-    [users]
-  )
+    state.account.fetchAccountUsers();
+    state.family.fetchFamilyRequests();
+  }, []);
+  const onApproveRequest = useCallback(
+    (request: FamilyRequestState) =>
+      async (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+
+        await request.approveRequest();
+        await state.account.fetchAccountUsers();
+        await state.family.fetchFamilyRequests();
+      },
+    [],
+  );
+  const onRejectRequest = useCallback(
+    (request: FamilyRequestState) =>
+      async (event: MouseEvent<HTMLAnchorElement>) => {
+        event.preventDefault();
+
+        await request.rejectRequest();
+        await state.family.fetchFamilyRequests();
+      },
+    [],
+  );
 
   return (
     <div className={css.root}>
@@ -25,13 +47,33 @@ export const Account = observer((): JSX.Element => {
       <div>
         <h3>Family users:</h3>
         {}
-        {familyUsers.length === 0 && (
+        {users.length === 1 && (
           <div className={css.emptyList}>No additional users...</div>
         )}
-        {familyUsers.map((user) => (
-          <div key={user.id}>{user.name}</div>
+        {users.map(user => (
+          <div key={user.id}>
+            {user.name} {user.id === state.user.id && ' (You)'}
+          </div>
+        ))}
+      </div>
+      <div className={css.pendingRequests}>
+        {fRequests.length > 0 && <h3>Pending requests:</h3>}
+        {fRequests.map(request => (
+          <div key={request.id} className={css.pendingRequest}>
+            {request.user} -{' '}
+            <Link to="/dashboard/family" onClick={onApproveRequest(request)}>
+              Approve
+            </Link>{' '}
+            <Link
+              className={css.rejectRequest}
+              to="/dashboard/family"
+              onClick={onRejectRequest(request)}
+            >
+              Reject
+            </Link>
+          </div>
         ))}
       </div>
     </div>
-  )
-})
+  );
+});

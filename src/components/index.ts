@@ -1,2 +1,2 @@
-export { Picker } from './picker'
-export { Pager } from './pager'
+export { Picker } from './picker';
+export { Pager } from './pager';

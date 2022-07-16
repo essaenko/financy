@@ -18,9 +18,8 @@ type PropsType = {
   user: UserState;
 };
 
-export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
+export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
 
   const history = useHistory();
@@ -42,26 +41,25 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       setter(target.value);
     };
-  const onSubmit = (event: MouseEvent) => {
+  const onSubmit = async (event: MouseEvent) => {
     event.preventDefault();
     setNotification('');
 
-    user.loginUser(email, password).then(res => {
-      if (res.errorCode === APIErrorList.UnauthorizedException) {
-        setNotification('User not found, check your credentials and try again');
-      }
-      if (res.errorCode === APIErrorList.ServiceUnreachableException) {
-        setNotification(
-          `Service temporary unavailable. Please try again later`,
-        );
-      }
-    });
+    const result = await user.restorePassword(email);
+
+    if (result.errorCode === APIErrorList.UserNotFountException) {
+      setNotification(`Account with email ${email} was not found`);
+    }
+
+    if (result.errorCode === APIErrorList.ServiceUnreachableException) {
+      setNotification('Service temporary unreachable, please try again later');
+    }
   };
 
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Welcome</h2>
+        <h2>Restore password</h2>
         <input
           type="email"
           placeholder="Email"
@@ -69,23 +67,12 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
           value={email}
           onChange={onChangeFactory(setEmail)}
         />
-        <input
-          type="password"
-          placeholder="Password"
-          className={css.field}
-          autoComplete="off"
-          value={password}
-          onChange={onChangeFactory(setPassword)}
-        />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit}>
-          Login
+          Restore
         </button>
-        <Link to="/signup" className={css.link}>
-          Signup
-        </Link>
-        <Link to="/restore" className={css.link}>
-          Forgot password
+        <Link to="/" className={css.link}>
+          Back
         </Link>
       </form>
     </div>

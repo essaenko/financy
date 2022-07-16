@@ -1,6 +1,6 @@
 .root {
   padding: 20px;
-  overflow: scroll;
+  overflow: hidden scroll;
   width: 100%;
 
   .header {
@@ -9,9 +9,8 @@
     padding-bottom: 20px;
 
     .icon {
-      width: var(--defaultIconWidth);
-      height: var(--defaultIconHeight);
       margin-left: 10px;
+      color: var(--system-black);
       cursor: pointer;
     }
   }
@@ -67,6 +66,12 @@
         flex-direction: column;
         box-shadow: var(--system-opacied-gray) 0 0 10px;
 
+        @media screen and (max-width: 400px) {
+          max-width: 100%;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
         .paymentName {
           font-size: 21px;
         }
@@ -82,7 +87,6 @@
         }
 
         .paymentOwner {
-
         }
 
         & + .paymentMethod {

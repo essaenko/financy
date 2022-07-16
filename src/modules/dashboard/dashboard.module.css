@@ -4,7 +4,11 @@
   .content {
     height: calc(100% - 45px);
     display: flex;
-    overflow: scroll;
+
+    @media screen and (max-width: 400px) {
+      height: 100%;
+      margin-top: -45px;
+    }
   }
 
   .accountPopup {
@@ -16,9 +20,22 @@
     font-size: 18px;
     text-align: center;
     line-height: 30px;
-    
+
+    .joinForm {
+      display: flex;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+
     button {
       display: block;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 230px;
       margin-top: 20px;
     }
   }

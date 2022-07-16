@@ -1,18 +1,20 @@
 .root {
-
 }
 
-.login, .registration {
+.login,
+.registration {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  padding: 0 20px;
 
   .form {
     display: flex;
     flex-direction: column;
     width: 400px;
+    max-width: 100%;
 
     span {
       margin-top: 10px;
@@ -72,7 +74,7 @@
       margin: 10px auto 0;
       border: 0;
       background-color: transparent;
-      transition: .1s all;
+      transition: 0.1s all;
 
       &:hover {
         cursor: pointer;
@@ -106,13 +108,13 @@
         border: 1px solid #07c;
         border-radius: 4px;
         font-weight: 400;
-        background: linear-gradient(#42a1ec,#0070c9);
+        background: linear-gradient(#42a1ec, #0070c9);
         color: var(--system-white);
         width: auto;
 
         &:hover {
           cursor: pointer;
-          background: linear-gradient(#51a9ee,#147bcd);
+          background: linear-gradient(#51a9ee, #147bcd);
         }
       }
     }
