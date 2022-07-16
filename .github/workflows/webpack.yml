@@ -27,3 +27,8 @@ jobs:
         npm install
         npm i -g typescript
         npm run build
+    - name: Archive build folder
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build/
