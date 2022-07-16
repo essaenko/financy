@@ -33,7 +33,7 @@ export const CategoryList = observer((): JSX.Element => {
     setTabState(CategoryTypeList[type as keyof typeof CategoryTypeList]);
   };
 
-  const deepRender = (node: TreeNode & { name?: string }): JSX.Element => (
+  const deepRender = (node: TreeNode<{ name?: string }>): JSX.Element => (
     <div
       key={node.id}
       className={classnames(css.deepNode, {
