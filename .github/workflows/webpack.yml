@@ -25,4 +25,5 @@ jobs:
     - name: Build
       run: |
         npm install
+        npm i -g typescript
         npm run build
