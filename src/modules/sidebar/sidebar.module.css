@@ -5,17 +5,21 @@
   height: 100%;
   background-color: var(--system-mate-silver);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   @media screen and (max-width: 400px) {
-    width: 0;
-    min-width: 0;
-    transition: .3s ease-in-out;
+    display: none;
+  }
 
-    &.opened {
-      width: 260px;
-      min-width: 260px;
-      transition: .3s ease-in-out;
-    }
+  .footerItem,
+  .footerLink {
+    padding: 5px 10px;
+    text-align: center;
+  }
+
+  .footerLink {
+    margin-top: auto;
   }
 
   .link {

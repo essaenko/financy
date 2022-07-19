@@ -4,19 +4,9 @@ import { NavLink } from 'react-router-dom';
 import classnames from 'classnames';
 import css from './sidebar.module.css';
 
-type Props = {
-  state: boolean;
-  onClose: () => void;
-};
-
-export const Sidebar = ({ state, onClose }: Props): JSX.Element => {
+export const Sidebar = (): JSX.Element => {
   return (
-    <div
-      onClick={onClose}
-      className={classnames(css.root, {
-        [css.opened]: state,
-      })}
-    >
+    <div className={classnames(css.root)}>
       <NavLink
         to="/dashboard/transaction"
         className={css.link}
@@ -46,12 +36,16 @@ export const Sidebar = ({ state, onClose }: Props): JSX.Element => {
         <span>Categories</span>
       </NavLink>
       <NavLink
-        to="/dashboard/family"
+        to="/dashboard/account"
         className={css.link}
         activeClassName={css.activeLink}
       >
         <span>Family</span>
       </NavLink>
+      <a className={css.footerLink} href="mailto:support@financy.live">
+        Support
+      </a>
+      <span className={css.footerItem}>Financy © 2022</span>
     </div>
   );
 };

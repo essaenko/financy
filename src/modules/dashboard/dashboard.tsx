@@ -8,17 +8,12 @@ import { Header } from 'modules/header/header';
 import css from './dashboard.module.css';
 
 export const Dashboard = (): JSX.Element => {
-  const [isSidebarOpened, setIsSidebarOpened] = useState(false);
-
   return (
     <div className={css.root}>
       <Route path="/dashboard">
-        <Header onOpenSidebar={() => setIsSidebarOpened(true)} />
+        <Header />
         <DashboardAccount />
-        <DashboardContent
-          sidebarState={isSidebarOpened}
-          onCloseSidebar={() => setIsSidebarOpened(false)}
-        />
+        <DashboardContent />
       </Route>
     </div>
   );

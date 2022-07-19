@@ -45,7 +45,7 @@ export const DashboardAccount = observer((): JSX.Element => {
       const result = await state.account.createAccount();
 
       if (result.success) {
-        history.push('/dashboard/family');
+        history.push('/dashboard/account');
       }
     },
     [history],

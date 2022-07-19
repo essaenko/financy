@@ -47,26 +47,26 @@ export const Account = observer((): JSX.Element => {
       <div>
         <h3>Family users:</h3>
         {}
-        {users.length === 1 && (
-          <div className={css.emptyList}>No additional users...</div>
-        )}
         {users.map(user => (
           <div key={user.id}>
             {user.name} {user.id === state.user.id && ' (You)'}
           </div>
         ))}
+        {users.length === 1 && (
+          <div className={css.emptyList}>No additional users...</div>
+        )}
       </div>
       <div className={css.pendingRequests}>
         {fRequests.length > 0 && <h3>Pending requests:</h3>}
         {fRequests.map(request => (
           <div key={request.id} className={css.pendingRequest}>
             {request.user} -{' '}
-            <Link to="/dashboard/family" onClick={onApproveRequest(request)}>
+            <Link to="/dashboard/account" onClick={onApproveRequest(request)}>
               Approve
             </Link>{' '}
             <Link
               className={css.rejectRequest}
-              to="/dashboard/family"
+              to="/dashboard/account"
               onClick={onRejectRequest(request)}
             >
               Reject
@@ -74,6 +74,10 @@ export const Account = observer((): JSX.Element => {
           </div>
         ))}
       </div>
+      <a className={css.footerLink} href="mailto:support@financy.live">
+        Support
+      </a>
+      <span>Financy © 2022</span>
     </div>
   );
 });

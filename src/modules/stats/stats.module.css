@@ -10,6 +10,13 @@
   }
 
   .content {
+    @media screen and (max-width: 400px) {
+      .chartWrapper {
+        width: 100%;
+        overflow: scroll;
+      }
+    }
+
     h3 {
       padding: 20px 0;
     }
@@ -24,6 +31,11 @@
 
         @media screen and (max-width: 400px) {
           flex-direction: column;
+
+          input, select {
+            height: 40px !important;
+            margin: 10px 0 !important;
+          }
         }
 
         input,

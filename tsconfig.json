@@ -27,8 +27,12 @@
 
       "paths": {
         "modules/*": ["modules/*"],
+        "models/*": ["models/*"],
+        "api/*": ["api/*"],
         "static/*": ["static/*"],
-        "utils/*": ["utils/*"]
+        "components/*": ["components/*"],
+        "utils/*": ["utils/*"],
       }
-    }
-  }
+    },
+  "include": ["src"]
+}

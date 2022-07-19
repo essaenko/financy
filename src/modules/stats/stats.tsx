@@ -138,14 +138,10 @@ export const Stats = observer((): JSX.Element => {
   }, [categories, structure]);
 
   const halfChartWidth = useMemo(() => {
-    return window.innerWidth > 400
-      ? window.innerWidth - 320 / 2
-      : window.innerWidth - 30;
+    return window.innerWidth > 400 ? window.innerWidth - 320 / 2 : 800;
   }, []);
   const fullChartWidth = useMemo(() => {
-    return window.innerWidth > 400
-      ? window.innerWidth - 320
-      : window.innerWidth - 30;
+    return window.innerWidth > 400 ? window.innerWidth - 320 : 800;
   }, []);
 
   useEffect(() => {
@@ -310,56 +306,65 @@ export const Stats = observer((): JSX.Element => {
         <div className={css.graphs}>
           <div>
             <h3>Income</h3>
-            <StyledLineChart
-              dataKeys={['value']}
-              width={halfChartWidth}
-              data={incomeData}
-              dateFormat={tickDateFormat}
-            />
+            <div className={css.chartWrapper}>
+              <StyledLineChart
+                dataKeys={['value']}
+                width={halfChartWidth}
+                data={incomeData}
+                dateFormat={tickDateFormat}
+              />
+            </div>
           </div>
           <div>
             <h3>Outcome</h3>
-            <StyledLineChart
-              dataKeys={['value']}
-              width={halfChartWidth}
-              data={outcomeData}
-              dateFormat={tickDateFormat}
-            />
+            <div className={css.chartWrapper}>
+              <StyledLineChart
+                dataKeys={['value']}
+                width={halfChartWidth}
+                data={outcomeData}
+                dateFormat={tickDateFormat}
+              />
+            </div>
           </div>
         </div>
         <div className={css.graphs}>
           <div>
             <h3>Dynamic</h3>
-            <StyledLineChart
-              dataKeys={['value']}
-              width={fullChartWidth}
-              data={
-                type === TransactionTypeList.All &&
-                income.length > 0 &&
-                outcome.length > 0
-                  ? income.map((batch, index) => ({
-                      date: batch.date,
-                      value: (batch.value ?? 0) - (outcome[index]?.value || 0),
-                    }))
-                  : []
-              }
-              dateFormat={tickDateFormat}
-              tooltipTitle="Difference"
-            />
+            <div className={css.chartWrapper}>
+              <StyledLineChart
+                dataKeys={['value']}
+                width={fullChartWidth}
+                data={
+                  type === TransactionTypeList.All &&
+                  income.length > 0 &&
+                  outcome.length > 0
+                    ? income.map((batch, index) => ({
+                        date: batch.date,
+                        value:
+                          (batch.value ?? 0) - (outcome[index]?.value || 0),
+                      }))
+                    : []
+                }
+                dateFormat={tickDateFormat}
+                tooltipTitle="Difference"
+              />
+            </div>
           </div>
         </div>
         <div className={css.graphs}>
           <div>
             <h3>Remains</h3>
-            <StyledLineChart
-              xDataKey="date"
-              width={fullChartWidth}
-              height={360}
-              dateFormat="dd.MM.yy"
-              data={remainsData}
-              dataKeys={Object.values(remainsKeys)}
-              showLegend
-            />
+            <div className={css.chartWrapper}>
+              <StyledLineChart
+                xDataKey="date"
+                width={fullChartWidth}
+                height={360}
+                dateFormat="dd.MM.yy"
+                data={remainsData}
+                dataKeys={Object.values(remainsKeys)}
+                showLegend
+              />
+            </div>
           </div>
         </div>
       </div>

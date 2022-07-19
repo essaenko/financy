@@ -10,19 +10,11 @@ import { Stats } from 'modules/stats';
 
 import css from './dashboard.module.css';
 
-type Props = {
-  sidebarState: boolean;
-  onCloseSidebar: () => void;
-};
-
-export const DashboardContent = ({
-  sidebarState,
-  onCloseSidebar,
-}: Props): JSX.Element => {
+export const DashboardContent = (): JSX.Element => {
   return (
     <div className={css.content}>
-      <Sidebar state={sidebarState} onClose={onCloseSidebar} />
-      <Route path="/dashboard/family">
+      <Sidebar />
+      <Route path="/dashboard/account">
         <Account />
       </Route>
       <Route path="/dashboard/category">

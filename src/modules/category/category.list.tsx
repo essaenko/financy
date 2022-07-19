@@ -12,6 +12,7 @@ import { normalizeTree, TreeNode } from 'utils/collection.utils';
 import css from 'modules/category/category.module.css';
 import { state } from '../../models';
 import { NetworkComponentStatusList } from '../../api/api.handler';
+import { PlusIcon, ReloadIcon } from 'static/icons';
 
 export const CategoryList = observer((): JSX.Element => {
   const [tabState, setTabState] = useState<CategoryTypeList>(
@@ -50,7 +51,12 @@ export const CategoryList = observer((): JSX.Element => {
   return (
     <>
       <div className={css.header}>
-        <h2>Categories </h2>
+        <h2>
+          Categories{' '}
+          <Link to="/dashboard/category/create" className={css.mobileLink}>
+            <PlusIcon className={css.icon} />
+          </Link>
+        </h2>
         <Picker
           className={css.picker}
           onChange={onChangeCategoryType}
@@ -70,8 +76,8 @@ export const CategoryList = observer((): JSX.Element => {
             },
           ]}
         />
-        <Link to="/dashboard/category/create">
-          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
+        <Link to="/dashboard/category/create" className={css.desktopLink}>
+          <PlusIcon className={css.icon} />
         </Link>
       </div>
       <div className={css.categoriesOwner}>
@@ -83,10 +89,7 @@ export const CategoryList = observer((): JSX.Element => {
         {status === NetworkComponentStatusList.Failed && (
           <div className={css.loader}>
             Some error occurred while fetching categories...
-            <span
-              className={classnames(css.icon, 'fa', 'fa-arrow-rotate-right')}
-              onClick={refreshList}
-            />
+            <ReloadIcon className={css.icon} onClick={refreshList} />
           </div>
         )}
       </div>

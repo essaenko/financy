@@ -1,7 +1,10 @@
 import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '../globals.config';
 
 class Api {
-  private endpoint: string = `${window.location.protocol}//${window.location.hostname}/api/v1`;
+  private endpoint: string =
+    process.env.NODE_ENV === 'production'
+      ? `/api/v1`
+      : `${window.location.protocol}//${window.location.hostname}:8080/api/v1`;
   private token: string | null = localStorage.getItem(
     AUTH_TOKEN_LOCAL_STORAGE_KEY,
   );

@@ -17,6 +17,7 @@ import { state } from 'models';
 import { TransactionTypeList } from 'models/transaction.model';
 
 import css from './transaction.module.css';
+import { FilterIcon, PlusIcon } from 'static/icons';
 
 export const TransactionList = observer((): JSX.Element => {
   const history = useHistory();
@@ -128,76 +129,78 @@ export const TransactionList = observer((): JSX.Element => {
           active={type}
           onChange={id => () => setType(id as TransactionTypeList)}
         />
-        <Link
-          to={{
-            pathname: '/dashboard/transaction/create',
-            search: history.location.search,
-          }}
-        >
-          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
-        </Link>
-        <div
-          className={classnames(css.filters, {
-            [css.activeFilter]:
-              dateInterval !== DateIntervalList.Month ||
-              category !== 0 ||
-              dateFilter !== null,
-          })}
-        >
-          <i className={classnames(css.icon, 'fa', 'fa-filter')} />
-          <div className={css.hiddenContent}>
-            <Picker
-              className={css.dateIntervalPicker}
-              elements={[
-                {
-                  id: DateIntervalList.Day,
-                  text: DateIntervalList.Day.toString(),
-                },
-                {
-                  id: DateIntervalList.Month,
-                  text: DateIntervalList.Month.toString(),
-                },
-                {
-                  id: DateIntervalList.Year,
-                  text: DateIntervalList.Year.toString(),
-                },
-              ]}
-              active={dateInterval}
-              onChange={id => () => setDateInterval(id as DateIntervalList)}
-            />
-            <form>
-              <select
-                value={category ?? 0}
-                onChange={event => setCategory(+event.currentTarget.value)}
-              >
-                <option value={0} disabled key={0}>
-                  Filter by category
-                </option>
-                {categories
-                  .filter(
-                    category =>
-                      type === TransactionTypeList.All ||
-                      category.type?.valueOf() === type.valueOf(),
-                  )
-                  .map(category => (
-                    <option value={category.id} key={category.id}>
-                      {category.name}
-                      {category.parent && ` (${category.parent.name})`}
-                    </option>
-                  ))}
-              </select>
-              <input
-                type="date"
-                placeholder="From date"
-                onChange={event =>
-                  setDateFilter(new Date(event.currentTarget.value).getTime())
-                }
-                value={dateFilterValue}
+        <div className={css.buttons}>
+          <Link
+            to={{
+              pathname: '/dashboard/transaction/create',
+              search: history.location.search,
+            }}
+          >
+            <PlusIcon className={css.icon} />
+          </Link>
+          <div
+            className={classnames(css.filters, {
+              [css.activeFilter]:
+                dateInterval !== DateIntervalList.Month ||
+                category !== 0 ||
+                dateFilter !== null,
+            })}
+          >
+            <FilterIcon className={css.icon} />
+            <div className={css.hiddenContent}>
+              <Picker
+                className={css.dateIntervalPicker}
+                elements={[
+                  {
+                    id: DateIntervalList.Day,
+                    text: DateIntervalList.Day.toString(),
+                  },
+                  {
+                    id: DateIntervalList.Month,
+                    text: DateIntervalList.Month.toString(),
+                  },
+                  {
+                    id: DateIntervalList.Year,
+                    text: DateIntervalList.Year.toString(),
+                  },
+                ]}
+                active={dateInterval}
+                onChange={id => () => setDateInterval(id as DateIntervalList)}
               />
-              <button className="flat" onClick={clearFilters}>
-                Clear
-              </button>
-            </form>
+              <form>
+                <select
+                  value={category ?? 0}
+                  onChange={event => setCategory(+event.currentTarget.value)}
+                >
+                  <option value={0} disabled key={0}>
+                    Filter by category
+                  </option>
+                  {categories
+                    .filter(
+                      category =>
+                        type === TransactionTypeList.All ||
+                        category.type?.valueOf() === type.valueOf(),
+                    )
+                    .map(category => (
+                      <option value={category.id} key={category.id}>
+                        {category.name}
+                        {category.parent && ` (${category.parent.name})`}
+                      </option>
+                    ))}
+                </select>
+                <input
+                  type="date"
+                  placeholder="From date"
+                  onChange={event =>
+                    setDateFilter(new Date(event.currentTarget.value).getTime())
+                  }
+                  value={dateFilterValue}
+                />
+                <button className="flat" onClick={clearFilters}>
+                  Clear
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

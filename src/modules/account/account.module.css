@@ -1,5 +1,12 @@
 .root {
+  width: 100%;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: 400px) {
+    padding-bottom: 65px;
+  }
 
   h2,
   h3 {
@@ -35,5 +42,15 @@
 
   .emptyList {
     color: var(--system-light-text);
+  }
+
+  .footerLink {
+    display: block;
+    margin-top: auto;
+    padding: 5px 10px;
+  }
+
+  .footerLink + span {
+    padding: 5px 10px;
   }
 }

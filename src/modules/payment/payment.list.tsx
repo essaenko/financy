@@ -6,6 +6,7 @@ import css from 'modules/payment/payment.module.css';
 import classnames from 'classnames';
 import { state } from '../../models';
 import { NetworkComponentStatusList } from '../../api/api.handler';
+import { PlusIcon } from 'static/icons';
 
 export const PaymentList = observer(() => {
   const { collection, status } = state.payment;
@@ -15,7 +16,7 @@ export const PaymentList = observer(() => {
       <div className={css.header}>
         <h2>Payment methods</h2>
         <Link to="/dashboard/payment/create">
-          <i className={classnames(css.icon, 'fa', 'fa-lg', 'fa-plus')} />
+          <PlusIcon className={css.icon} />
         </Link>
       </div>
       <div className={css.content}>

@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import css from './pager.module.css';
+import { ChevronLeftIcon, ChevronRightIcon } from 'static/icons';
 
 type PropsType = {
   page: number;
@@ -41,13 +42,13 @@ export const Pager = ({ count, page, onChange }: PropsType): JSX.Element => {
   return (
     <div className={css.root}>
       <span className={css.icon} onClick={onPrevClick}>
-        <i className="fa fa-chevron-left" />
+        <ChevronLeftIcon />
       </span>
       <div className={css.pages}>
         <input type="text" value={value} onChange={onChangeValue} /> of {count}
       </div>
       <span className={css.icon} onClick={onNextClick}>
-        <i className="fa fa-chevron-right" />
+        <ChevronRightIcon />
       </span>
     </div>
   );
