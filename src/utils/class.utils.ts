@@ -1,6 +1,7 @@
 import { TransactionTypeList } from '../models/transaction.model';
 
 export enum DateIntervalList {
+  Ever = 'Ever',
   Day = 'Day',
   Month = 'Month',
   Year = 'Year',

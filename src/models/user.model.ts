@@ -5,6 +5,8 @@ import {
   fetchUser,
   createUser,
   restorePassword,
+  resetPassword,
+  updatePassword,
 } from 'api/api.user';
 import { APIParsedResponse } from '../api/api.handler';
 
@@ -31,6 +33,14 @@ export class UserState implements UserModel {
     return restorePassword(email);
   }
 
+  async resetPassword(password: string, token: string) {
+    return resetPassword(password, token);
+  }
+
+  async updatePassword(currentPassword: string, newPassowrd: string) {
+    return updatePassword(currentPassword, newPassowrd);
+  }
+
   async loginUser(email: string, password: string) {
     const result = await loginUser(email, password);
 
@@ -47,6 +57,8 @@ export class UserState implements UserModel {
     if (result.success) {
       await this.loginUser(email, password);
     }
+
+    return result;
   }
 
   async fetchUser(): Promise<APIParsedResponse<UserModel>> {

@@ -13,16 +13,20 @@ import { UserState } from 'models/user.model';
 
 import { APIErrorList } from 'api/api.handler';
 import css from './auth.module.css';
+import { useQuery } from 'utils/url.utils';
 
 type PropsType = {
   user: UserState;
 };
 
-export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
-  const [email, setEmail] = useState<string>('');
+export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
+  const [password, setPassword] = useState<string>('');
+  const [passwordCopy, setPasswordCopy] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
   const [disabled, setDisabled] = useState<boolean>(false);
+
   const history = useHistory();
+  const query = useQuery();
 
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>
@@ -33,8 +37,24 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
     event.preventDefault();
     setNotification('');
     setDisabled(true);
+    const token = query.get('token');
 
-    const result = await user.restorePassword(email);
+    if (password !== passwordCopy) {
+      setNotification('Passwords are not the same');
+      setDisabled(false);
+
+      return;
+    }
+    if (!token) {
+      setNotification(
+        'Reset link are invalid, please check your mailbox for correct link',
+      );
+      setDisabled(false);
+
+      return;
+    }
+
+    const result = await user.resetPassword(password, token);
 
     if (result.errorCode === APIErrorList.ServiceUnreachableException) {
       setNotification('Service temporary unreachable, please try again later');
@@ -43,7 +63,7 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
 
     if (result.success) {
       setNotification(
-        "We'll send email with instructions if user with this email exists. Check your mailbox (mail can be in Spam folder).",
+        'Your password successfully changed, log in with your new credentials.',
       );
 
       setTimeout(() => {
@@ -55,21 +75,31 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Restore password</h2>
+        <h2>Change password</h2>
         <input
-          type="email"
-          placeholder="Email"
+          type="password"
+          placeholder="Password"
           className={css.field}
-          value={email}
-          onChange={onChangeFactory(setEmail)}
+          value={password}
+          autoComplete="off"
+          onChange={onChangeFactory(setPassword)}
+          disabled={disabled}
+        />
+        <input
+          type="password"
+          placeholder="Repeat password"
+          className={css.field}
+          value={passwordCopy}
+          autoComplete="off"
+          onChange={onChangeFactory(setPasswordCopy)}
           disabled={disabled}
         />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit} disabled={disabled}>
-          Restore
+          Set new password
         </button>
         <Link to="/" className={css.link}>
-          Back
+          Cancel
         </Link>
       </form>
     </div>

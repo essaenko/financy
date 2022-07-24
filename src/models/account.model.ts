@@ -3,12 +3,13 @@ import {
   createAccount,
   fetchAccount,
   fetchAccountUsers,
-} from '../api/api.account';
+  removeUserFromAccount,
+} from 'api/api.account';
 import {
   APIErrorList,
   APIParsedResponse,
   NetworkComponentStatusList,
-} from '../api/api.handler';
+} from 'api/api.handler';
 import { UserModel } from './user.model';
 
 export interface AccountModel {
@@ -80,5 +81,16 @@ export class AccountState implements AccountModel {
         this.users = result.payload ?? [];
       });
     }
+  }
+
+  async removeUserFromAccount(email: string) {
+    const result = await removeUserFromAccount(email);
+
+    if (result.success) {
+      await this.fetchAccount();
+      await this.fetchAccountUsers();
+    }
+
+    return result;
   }
 }

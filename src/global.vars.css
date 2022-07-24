@@ -16,4 +16,6 @@
   --system-red-light: rgba(255, 0, 0, 0.15);
   --pick: #d9d9d9;
   --system-green: #65db39;
+
+  --mobile-device-width: 414px;
 }

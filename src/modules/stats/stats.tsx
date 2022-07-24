@@ -138,10 +138,12 @@ export const Stats = observer((): JSX.Element => {
   }, [categories, structure]);
 
   const halfChartWidth = useMemo(() => {
-    return window.innerWidth > 400 ? window.innerWidth - 320 / 2 : 800;
+    return window.innerWidth > 414
+      ? (window.innerWidth - 320) / 2
+      : (window.innerWidth - 30) / 2;
   }, []);
   const fullChartWidth = useMemo(() => {
-    return window.innerWidth > 400 ? window.innerWidth - 320 : 800;
+    return window.innerWidth > 414 ? window.innerWidth - 320 : 800;
   }, []);
 
   useEffect(() => {
@@ -309,7 +311,9 @@ export const Stats = observer((): JSX.Element => {
             <div className={css.chartWrapper}>
               <StyledLineChart
                 dataKeys={['value']}
-                width={halfChartWidth}
+                width={
+                  window.innerWidth > 414 ? halfChartWidth : fullChartWidth
+                }
                 data={incomeData}
                 dateFormat={tickDateFormat}
               />
@@ -320,7 +324,9 @@ export const Stats = observer((): JSX.Element => {
             <div className={css.chartWrapper}>
               <StyledLineChart
                 dataKeys={['value']}
-                width={halfChartWidth}
+                width={
+                  window.innerWidth > 414 ? halfChartWidth : fullChartWidth
+                }
                 data={outcomeData}
                 dateFormat={tickDateFormat}
               />

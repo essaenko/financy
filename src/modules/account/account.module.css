@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: 400px) {
-    padding-bottom: 65px;
+  @media screen and (max-width: 414px) {
+    padding-bottom: 80px;
   }
 
   h2,
@@ -30,6 +30,12 @@
 
   .ownerData {
     margin-bottom: 10px;
+  }
+
+  .family {
+    .remove {
+      color: var(--system-red)
+    }
   }
 
   .pendingRequests {

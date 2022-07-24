@@ -1,9 +1,9 @@
 import React, {
+  MouseEvent,
+  useCallback,
   useEffect,
   useMemo,
   useState,
-  MouseEvent,
-  useCallback,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link, useHistory } from 'react-router-dom';
@@ -11,20 +11,20 @@ import classnames from 'classnames';
 
 import { TransactionItem } from 'modules/transaction/transaction.item';
 import { DateIntervalList, TransactionFilters } from 'utils/class.utils';
-import { Pager, Picker } from 'components';
+import { Picker } from 'components';
 import { NetworkComponentStatusList } from 'api/api.handler';
 import { state } from 'models';
 import { TransactionTypeList } from 'models/transaction.model';
 
 import css from './transaction.module.css';
 import { FilterIcon, PlusIcon } from 'static/icons';
+import { TRANSACTIONS_PER_PAGE } from '../../globals.config';
+import { useQuery } from 'utils/url.utils';
+import { addDays, addMonths, addYears } from 'date-fns';
 
 export const TransactionList = observer((): JSX.Element => {
   const history = useHistory();
-  const query = useMemo(
-    () => new URLSearchParams(history.location.search),
-    [history.location.search],
-  );
+  const query = useQuery();
   const today = useMemo(() => new Date(), []);
   const {
     transaction: { collection, status, total },
@@ -37,7 +37,7 @@ export const TransactionList = observer((): JSX.Element => {
   );
   const [dateInterval, setDateInterval] = useState<DateIntervalList>(
     DateIntervalList[query.get('interval') as keyof typeof DateIntervalList] ??
-      DateIntervalList.Month,
+      DateIntervalList.Ever,
   );
   const [category, setCategory] = useState<number>(
     Number(query.get('category')) || 0,
@@ -52,6 +52,10 @@ export const TransactionList = observer((): JSX.Element => {
 
     return date.toISOString().slice(0, 10);
   }, [dateFilter]);
+  const [filterState, setFilterState] = useState<boolean>(false);
+  const toggleFilter = useCallback(() => {
+    setFilterState(!filterState);
+  }, [filterState]);
 
   useEffect(() => {
     if (categoriesStatus === NetworkComponentStatusList.Untouched) {
@@ -60,13 +64,27 @@ export const TransactionList = observer((): JSX.Element => {
   }, [categoriesStatus]);
 
   useEffect(() => {
+    let dateFrom: number;
+    switch (dateInterval) {
+      case DateIntervalList.Day:
+        dateFrom = addDays(today, -1).getTime();
+        break;
+      case DateIntervalList.Month:
+        dateFrom = addMonths(today, -1).getTime();
+        break;
+      case DateIntervalList.Year:
+        dateFrom = addYears(today, -1).getTime();
+        break;
+      default:
+        dateFrom = new Date(account.createdAt || '').getTime();
+    }
     state.transaction.fetchTransactions(
       new TransactionFilters(
         page,
         void 0,
         type,
         category || void 0,
-        new Date(account.createdAt || '').getTime(),
+        dateFrom,
         today.getTime(),
         dateFilter ? +dateFilter : void 0,
       ),
@@ -102,7 +120,7 @@ export const TransactionList = observer((): JSX.Element => {
   const clearFilters = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setCategory(0);
-    setDateInterval(DateIntervalList.Month);
+    setDateInterval(DateIntervalList.Ever);
     setDateFilter(null);
   }, []);
 
@@ -141,16 +159,21 @@ export const TransactionList = observer((): JSX.Element => {
           <div
             className={classnames(css.filters, {
               [css.activeFilter]:
-                dateInterval !== DateIntervalList.Month ||
+                dateInterval !== DateIntervalList.Ever ||
                 category !== 0 ||
                 dateFilter !== null,
+              [css.open]: filterState,
             })}
           >
-            <FilterIcon className={css.icon} />
+            <FilterIcon className={css.icon} onClick={toggleFilter} />
             <div className={css.hiddenContent}>
               <Picker
                 className={css.dateIntervalPicker}
                 elements={[
+                  {
+                    id: DateIntervalList.Ever,
+                    text: DateIntervalList.Ever.toString(),
+                  },
                   {
                     id: DateIntervalList.Day,
                     text: DateIntervalList.Day.toString(),
@@ -199,12 +222,16 @@ export const TransactionList = observer((): JSX.Element => {
                 <button className="flat" onClick={clearFilters}>
                   Clear
                 </button>
+                <span onClick={() => setFilterState(false)}>Close</span>
               </form>
             </div>
           </div>
         </div>
       </div>
       <div className={css.content}>
+        {page > 1 &&
+          collection.length < page * TRANSACTIONS_PER_PAGE &&
+          collection.length < total && <span>Show previous transactions</span>}
         {status === NetworkComponentStatusList.Loaded &&
           collection.length === 0 && (
             <div className={css.info}>No transactions was found...</div>
@@ -216,21 +243,11 @@ export const TransactionList = observer((): JSX.Element => {
         {collection.map(transaction => (
           <TransactionItem key={transaction.id} transaction={transaction} />
         ))}
-        <Link
-          to={{
-            pathname: '/dashboard/transaction/create',
-            search: history.location.search,
-          }}
-        >
-          Add
-        </Link>
-        <div className={css.footer}>
-          <Pager
-            page={page}
-            count={Math.ceil(total / 20)}
-            onChange={(p: number) => setPage(p)}
-          />
-        </div>
+        {page < Math.ceil(total / TRANSACTIONS_PER_PAGE) && (
+          <span className={css.moreButton} onClick={() => setPage(page + 1)}>
+            Show more
+          </span>
+        )}
       </div>
     </div>
   );

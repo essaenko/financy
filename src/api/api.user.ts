@@ -15,6 +15,27 @@ export const restorePassword = async (
   return result;
 };
 
+export const resetPassword = async (
+  password: string,
+  token: string,
+): Promise<APIParsedResponse> => {
+  const result = await requestHandler(
+    api.post('/user/reset', { password, token }),
+  );
+
+  if (result.success) {
+    await api.removeToken();
+  }
+
+  return result;
+};
+
+export const updatePassword = async (
+  currentPassword: string,
+  newPassword: string,
+): Promise<APIParsedResponse> =>
+  requestHandler(api.post('/user/change', { currentPassword, newPassword }));
+
 export const loginUser = async (
   email: string,
   password: string,

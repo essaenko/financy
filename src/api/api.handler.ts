@@ -31,6 +31,8 @@ export enum APIErrorList {
   NoUserAccountException = 'NoUserAccountException',
   InvalidResponseException = 'InvalidResponseException',
   ServiceUnreachableException = 'ServiceUnreachableException',
+  InternalServerException = 'InternalServerException',
+  EmailAlreadyRegisteredException = 'EmailAlreadyRegisteredException',
 }
 
 export interface APIResponse<T> {

@@ -1,20 +1,22 @@
 import React, {
   ChangeEvent,
   Dispatch,
-  SetStateAction,
-  useState,
   MouseEvent,
+  SetStateAction,
   useEffect,
+  useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 
 import css from 'modules/auth/auth.module.css';
-import { UserState } from '../../models/user.model';
+import { UserState } from 'models/user.model';
+import { APIErrorList } from 'api/api.handler';
 
 enum FormStateList {
   Ok,
+  EmailAlreadyRegistered,
   InvalidEmail,
   InvalidName,
   InvalidPassword,
@@ -31,27 +33,13 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
   const [passwordCopy, setPasswordCopy] = useState<string>('');
   const [formState, setFormState] = useState<FormStateList>(FormStateList.Ok);
 
-  const history = useHistory();
-
-  useEffect(() => {
-    if (user.email === void 0) {
-      user.fetchUser();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user.email !== void 0) {
-      history.push('/dashboard');
-    }
-  }, [history, user.email]);
-
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       setter(target.value);
     };
 
-  const onSubmit = (event: MouseEvent) => {
+  const onSubmit = async (event: MouseEvent) => {
     event.preventDefault();
     let hasError: boolean = false;
 
@@ -76,7 +64,11 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
 
     if (!hasError) {
       setFormState(FormStateList.Ok);
-      user.createUser(email, name, password);
+      const result = await user.createUser(email, name, password);
+
+      if (result.errorCode === APIErrorList.EmailAlreadyRegisteredException) {
+        setFormState(FormStateList.EmailAlreadyRegistered);
+      }
     }
   };
 
@@ -120,6 +112,13 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
           value={passwordCopy}
           onChange={onChangeFactory(setPasswordCopy)}
         />
+        <span>
+          {formState === FormStateList.InvalidEmail && 'Incorrect email'}
+          {formState === FormStateList.InvalidName && 'Incorrect name'}
+          {formState === FormStateList.InvalidPassword && 'Invalid password'}
+          {formState === FormStateList.EmailAlreadyRegistered &&
+            'User with this email already registereg, try to login or reset your password'}
+        </span>
         <div className={css.regSubmitWrapper}>
           <button className={css.regSubmit} onClick={onSubmit}>
             Done

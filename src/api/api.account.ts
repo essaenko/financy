@@ -20,3 +20,9 @@ export const fetchAccountUsers = async (): Promise<
 > => {
   return requestHandler<UserModel[]>(api.get('/account/users'));
 };
+
+export const removeUserFromAccount = (
+  email: string,
+): Promise<APIParsedResponse> => {
+  return requestHandler<void>(api.post('/account/users/remove', { email }));
+};

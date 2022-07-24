@@ -13,9 +13,13 @@
       display: flex;
     }
     
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 414px) {
       flex-direction: column;
       align-items: start;
+      position: sticky;
+      top: -25px;
+      background-color: var(--system-white);
+      z-index: 1;
 
       .buttons {
         width: 100%;
@@ -45,12 +49,13 @@
       flex-direction: column;
       align-items: center;
 
-      &:hover {
+      &.open {
         .hiddenContent {
           opacity: 1;
           transform: scale(1);
           transition: transform, opacity 0.2s;
           z-index: 1;
+          pointer-events: auto;
         }
       }
 
@@ -70,6 +75,7 @@
         opacity: 0;
         transform: scale(0.9);
         transition: all 0.2s;
+        pointer-events: none;
       }
 
       i {
@@ -82,6 +88,21 @@
         margin: 0 auto 10px;
         width: 210px;
         max-width: 210px;
+
+        @media screen and (max-width: 414px) {
+          width: 100%;
+          max-width: 100%;
+          height: 35px;
+        }
+      }
+
+      span {
+        cursor: pointer;
+        text-align: center;
+        display: block;
+        color: var(--system-blue);
+        margin-top: 10px;
+        padding: 0;
       }
     }
 
@@ -89,7 +110,7 @@
       width: 250px;
       margin-right: 10px;
       
-      @media screen and (max-width: 400px) {
+      @media screen and (max-width: 414px) {
         width: 100%;
         height: 35px;
         margin: 10px 0;
@@ -220,7 +241,7 @@
     padding-bottom: 20px;
     position: relative;
 
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 414px) {
       padding-bottom: 75px;
     }
 
@@ -237,21 +258,14 @@
       }
     }
 
-    .footer {
-      margin-top: auto;
-      position: fixed;
-      bottom: 0;
-      left: 261px;
-      padding: 5px 10px;
-      right: 0;
-      background-color: var(--system-opacied-white);
-      backdrop-filter: blur(0.4rem);
-
-      @media screen and (max-width: 400px) {
-        left: 0;
-        height: 40px;
-        bottom: 45px;
-      }
+    .moreButton {
+      color: var(--system-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      height: 30px;
+      margin-top: 10px;
     }
   }
 }

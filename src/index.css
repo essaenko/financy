@@ -3,6 +3,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
+  overflow: hidden;
 }
 
 html {
@@ -68,6 +69,13 @@ a {
   height: 100%;
 }
 
+input::-webkit-date-and-time-value {
+  height: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
 input[type='date'] {
   display: block;
   border-color: var(--system-silver);
@@ -94,6 +102,11 @@ img {
 }
 
 form {
+  span {
+    color: var(--system-red);
+    display: block;
+    padding: 10px 5px;
+  }
   input,
   select {
     width: 100%;
@@ -109,7 +122,7 @@ form {
     box-sizing: border-box;
     -webkit-appearance: none;
 
-    @media screen and (max-width: 400px) {
+    @media screen and (max-width: 414px) {
       height: 35px;
     }
 

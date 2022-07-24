@@ -23,20 +23,6 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
   const [password, setPassword] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
 
-  const history = useHistory();
-
-  useEffect(() => {
-    if (user.email === void 0) {
-      user.fetchUser();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user.email !== void 0) {
-      history.push('/dashboard/transaction');
-    }
-  }, [history, user.email]);
-
   const onChangeFactory =
     (setter: Dispatch<SetStateAction<string>>) =>
     ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -47,12 +33,18 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
     setNotification('');
 
     user.loginUser(email, password).then(res => {
+      // eslint-disable-next-line no-debugger
       if (res.errorCode === APIErrorList.UnauthorizedException) {
         setNotification('User not found, check your credentials and try again');
       }
       if (res.errorCode === APIErrorList.ServiceUnreachableException) {
         setNotification(
           `Service temporary unavailable. Please try again later`,
+        );
+      }
+      if (res.errorCode === APIErrorList.InternalServerException) {
+        setNotification(
+          'Service temporary unavailable. Please try again later',
         );
       }
     });
