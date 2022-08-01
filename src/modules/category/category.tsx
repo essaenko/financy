@@ -8,11 +8,15 @@ import { CategoryCreate } from 'modules/category/category.create';
 import { state } from '../../models';
 
 import css from './category.module.css';
+import { NetworkComponentStatusList } from 'api/api.handler';
 
 export const Category = observer((): JSX.Element => {
+  const { status } = state.categories;
   useEffect(() => {
-    state.categories.fetchCategories();
-  }, []);
+    if (status !== NetworkComponentStatusList.Loaded) {
+      state.categories.fetchCategories();
+    }
+  }, [status]);
 
   return (
     <div className={css.root}>

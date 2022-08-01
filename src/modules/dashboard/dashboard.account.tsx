@@ -4,10 +4,7 @@ import classnames from 'classnames';
 import { Link, useHistory } from 'react-router-dom';
 
 import { state } from '../../models';
-import {
-  APIErrorList,
-  NetworkComponentStatusList,
-} from '../../api/api.handler';
+import { APIErrorList, NetworkComponentStatusList } from 'api/api.handler';
 
 import css from './dashboard.module.css';
 

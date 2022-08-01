@@ -188,6 +188,7 @@
         margin-left: auto;
         font-size: 14px;
         padding-left: 20px;
+        min-width: 115px;
       }
     }
 

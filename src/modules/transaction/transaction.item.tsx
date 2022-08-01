@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import {
   TransactionState,
   TransactionTypeList,
-} from '../../models/transaction.model';
+} from 'models/transaction.model';
 
 import css from 'modules/transaction/transaction.module.css';
 
@@ -30,8 +30,11 @@ export const TransactionItem = observer(({ transaction }: PropsType) => {
       })}
     >
       <div className={css.payment}>
-        {transaction.from?.name}{' '}
-        {transaction.to ? `→ ${transaction.to.name}` : ''}
+        {transaction.from?.name} ({transaction.from?.account?.name}){' '}
+        {transaction.from?.owner?.name}{' '}
+        {transaction.to
+          ? `→ ${transaction.to.name} (${transaction.to.account?.name}) ${transaction.to.owner?.name}`
+          : ''}
         <span>{new Date(transaction?.date || '').toDateString()}</span>
       </div>
       <div className={css.cost}>

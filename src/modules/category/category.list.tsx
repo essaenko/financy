@@ -6,13 +6,13 @@ import classnames from 'classnames';
 import { Picker } from 'components/picker';
 
 import { CategoryModel, CategoryTypeList } from 'models/category.model';
+import { state } from 'models';
+import { NetworkComponentStatusList } from 'api/api.handler';
+import { PlusIcon, ReloadIcon } from 'static/icons';
 
 import { normalizeTree, TreeNode } from 'utils/collection.utils';
 
 import css from 'modules/category/category.module.css';
-import { state } from '../../models';
-import { NetworkComponentStatusList } from '../../api/api.handler';
-import { PlusIcon, ReloadIcon } from 'static/icons';
 
 export const CategoryList = observer((): JSX.Element => {
   const [tabState, setTabState] = useState<CategoryTypeList>(

@@ -11,14 +11,15 @@ import { add, endOfMonth, getDayOfYear, startOfMonth } from 'date-fns';
 
 import { StyledLineChart, StyledPieChart } from 'modules/stats/stats.charts';
 
-import { dateToString } from 'utils/date.utils';
-import { TransactionTypeList } from '../../models/transaction.model';
-import { state } from '../../models';
+import { TransactionTypeList } from 'models/transaction.model';
+import { state } from 'models';
+import { CategoryModel, CategoryTypeList } from 'models/category.model';
 
-import { NetworkComponentStatusList } from '../../api/api.handler';
+import { dateToString } from 'utils/date.utils';
+
+import { NetworkComponentStatusList } from 'api/api.handler';
 
 import css from './stats.module.css';
-import { CategoryModel, CategoryTypeList } from '../../models/category.model';
 
 export const Stats = observer((): JSX.Element => {
   const { collection: categories } = state.categories;
@@ -31,7 +32,7 @@ export const Stats = observer((): JSX.Element => {
     remains,
     structure,
   } = state.stats;
-  const { collection: payments, status: paymentsStatus } = state.payment;
+  const { collection: accounts, status: accountStatus } = state.payment.account;
   const [type, setType] = useState<TransactionTypeList>(
     TransactionTypeList.All,
   );
@@ -61,20 +62,30 @@ export const Stats = observer((): JSX.Element => {
 
     remains.forEach(it => {
       if (it.key) {
-        const payment = payments.find(({ id }) => it.key);
+        const payment = accounts.find(({ id }) => id === it.key);
 
-        keys[it.key] = payment?.name ?? 'Unresolved payment method';
+        keys[it.key] =
+          `${payment?.name}(${payment?.id})` ?? 'Unresolved payment method';
       }
     });
 
     return keys;
-  }, [payments, remains]);
+  }, [accounts, remains]);
   const remainsData = useMemo(
     () =>
-      remains.map(it => ({
-        date: it.date,
-        [remainsKeys[it.key as number]]: it.value,
-      })),
+      remains.reduce((data: { [key: string]: number | string }[], batch) => {
+        const existedBatch = data.find(({ date }) => date === batch.date);
+        if (existedBatch) {
+          existedBatch[remainsKeys[batch.key as number]] = batch.value;
+        } else {
+          data.push({
+            date: batch.date,
+            [remainsKeys[batch.key as number]]: batch.value,
+          });
+        }
+
+        return data;
+      }, []),
     [remains, remainsKeys],
   );
 
@@ -159,10 +170,10 @@ export const Stats = observer((): JSX.Element => {
   }, [category, dateFrom, dateTo, statsStatus, type, user]);
 
   useEffect(() => {
-    if (paymentsStatus === NetworkComponentStatusList.Untouched) {
-      state.payment.fetchPaymentMethods();
+    if (accountStatus === NetworkComponentStatusList.Untouched) {
+      state.payment.account.fetchPaymentAccounts();
     }
-  }, [paymentsStatus]);
+  }, [accountStatus]);
 
   useEffect(() => {
     const dateDiff = getDayOfYear(dateTo) - getDayOfYear(dateFrom);
@@ -310,6 +321,7 @@ export const Stats = observer((): JSX.Element => {
             <h3>Income</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
+                tooltipTitle="Income"
                 dataKeys={['value']}
                 width={
                   window.innerWidth > 414 ? halfChartWidth : fullChartWidth
@@ -323,6 +335,7 @@ export const Stats = observer((): JSX.Element => {
             <h3>Outcome</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
+                tooltipTitle="Outcome"
                 dataKeys={['value']}
                 width={
                   window.innerWidth > 414 ? halfChartWidth : fullChartWidth

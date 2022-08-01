@@ -2,59 +2,105 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
-import css from 'modules/payment/payment.module.css';
-import classnames from 'classnames';
-import { state } from '../../models';
-import { NetworkComponentStatusList } from '../../api/api.handler';
+import { state } from 'models';
+import { NetworkComponentStatusList } from 'api/api.handler';
 import { PlusIcon } from 'static/icons';
 
+import css from 'modules/payment/payment.module.css';
+
 export const PaymentList = observer(() => {
-  const { collection, status } = state.payment;
+  const { collection: accounts, status: accountsStatus } =
+    state.payment.account;
+  const { collection: methods, status: methodsStatus } = state.payment.method;
 
   return (
     <>
       <div className={css.header}>
-        <h2>Payment methods</h2>
-        <Link to="/dashboard/payment/create">
+        <h2>Payment accounts</h2>
+        <Link to="/dashboard/payment/create?type=Account">
           <PlusIcon className={css.icon} />
         </Link>
       </div>
       <div className={css.content}>
-        {status === NetworkComponentStatusList.Loading &&
-          collection.length === 0 && (
+        {methodsStatus === NetworkComponentStatusList.Loading &&
+          methods.length === 0 && (
             <div className={css.loader}>
               Loading available payment methods...
             </div>
           )}
-        {collection.length === 0 &&
-          status === NetworkComponentStatusList.Loaded && (
+        {accounts.length === 0 &&
+          accountsStatus === NetworkComponentStatusList.Loaded && (
             <div className={css.loader}>
-              No payment methods found...
+              No payment accounts found...
               <br />
               <br />
-              <Link to="/dashboard/payment/create">Create first one</Link>
+              <Link to="/dashboard/payment/create?type=Account">
+                Create first one
+              </Link>
             </div>
           )}
-        {collection.length > 0 && (
-          <div className={css.paymentCollection}>
-            {collection.map(payment => {
+        {accounts.length > 0 && (
+          <div className={css.paymentAccountCollection}>
+            {accounts.map(account => {
               return (
-                <Link
-                  to={`/dashboard/payment/edit/${payment.id}`}
-                  className={css.paymentMethod}
-                  key={payment.id}
-                >
-                  <div className={css.paymentName}>{payment.name}</div>
-                  <div className={css.paymentRemains}>
-                    {new Intl.NumberFormat().format(payment.remains ?? 0)} RUB
+                <div className={css.paymentAccount} key={account.id}>
+                  <div className={css.accountHeader}>
+                    <div className={css.accountName}>{account.name}: </div>
+                    <div className={css.accountRemains}>
+                      {new Intl.NumberFormat().format(account.remains ?? 0)} RUB
+                    </div>
+                    <Link
+                      className={css.addLink}
+                      to={`/dashboard/payment/create?type=Method&account=${account.id}`}
+                    >
+                      <PlusIcon />
+                    </Link>
+                    <Link
+                      className={css.editLink}
+                      to={`/dashboard/payment/edit/${account.id}?type=Account`}
+                    >
+                      Edit
+                    </Link>
                   </div>
-                  <div className={css.paymentDescription}>
-                    {payment.description}
+                  <div className={css.accountDescription}>
+                    {account.description}
                   </div>
-                  <div className={css.paymentOwner}>
-                    {payment.account?.owner?.name}
+                  <div className={css.paymentCollection}>
+                    {methods.filter(p => p.account?.id === account.id)
+                      .length === 0 && (
+                      <div className={css.loader}>
+                        No payment methods found for this account...
+                        <br />
+                        <Link
+                          to={`/dashboard/payment/create?type=Method&account=${account.id}`}
+                        >
+                          Add new one
+                        </Link>
+                      </div>
+                    )}
+                    {methods
+                      .filter(p => p.account?.id === account.id)
+                      .map(payment => {
+                        return (
+                          <Link
+                            className={css.paymentMethod}
+                            to={`/dashboard/payment/edit/${payment.id}?type=Method`}
+                            key={payment.id}
+                          >
+                            <div className={css.paymentName}>
+                              {payment.name}
+                            </div>
+                            <div className={css.paymentDescription}>
+                              {payment.description}
+                            </div>
+                            <div className={css.paymentOwner}>
+                              {payment.owner?.name}
+                            </div>
+                          </Link>
+                        );
+                      })}
                   </div>
-                </Link>
+                </div>
               );
             })}
           </div>

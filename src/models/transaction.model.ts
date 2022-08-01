@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { TransactionFilters } from 'utils/class.utils';
-import { PaymentMethodModel } from './payment.model';
+import { PaymentMethodModel } from './payment.method.model';
 import { CategoryModel } from './category.model';
 import { UserModel } from './user.model';
 import { AccountModel } from './account.model';

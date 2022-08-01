@@ -54,17 +54,69 @@
       color: var(--system-light-text);
     }
 
-    .paymentCollection {
-      .paymentMethod {
-        width: 350px;
-        height: 170px;
-        background-color: var(--system-opacied-gray);
-        border-radius: 7px;
-        padding: 20px;
-        color: var(--system-white);
+    .paymentAccountCollection {
+      .paymentAccount {
+        font-size: 20px;
         display: flex;
+        width: 100%;
         flex-direction: column;
-        box-shadow: var(--system-opacied-gray) 0 0 10px;
+
+        & + .paymentAccount {
+          margin-top: 20px;
+        }
+
+        .accountHeader {
+          display: flex;
+          align-items: center;
+        }
+
+        .addLink {
+          margin-left: 10px;
+
+          img {
+            width: 15px;
+            height: 15px;
+          }
+        }
+
+        .editLink {
+          margin-left: auto;
+          font-size: 18px;
+        }
+
+        .accountName {
+          margin-right: 5px;
+        }
+
+        .accountRemains {}
+        .accountDescription {
+          font-size: 16px;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .paymentCollection {
+      padding: 10px 20px;
+
+      .loader {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .paymentMethod {
+        padding: 5px 10px;
+        display: flex;
+        color: var(--system-black);
+        font-size: 16px;
+        align-items: center;
+        border-bottom: 1px solid var(--system-aluminium);
+        transition: .3s ease;
+
+        &:hover {
+          background-color: var(--system-mate-silver);
+          transition: .3s ease;
+        }
 
         @media screen and (max-width: 414px) {
           max-width: 100%;
@@ -73,24 +125,20 @@
         }
 
         .paymentName {
-          font-size: 21px;
-        }
-
-        .paymentRemains {
-          margin-top: auto;
-          font-weight: 400;
-          font-size: 25px;
+          font-size: 18px;
+          min-width: 150px;
+          max-width: 170px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
 
         .paymentDescription {
-          margin-bottom: 40px;
+          margin-left: 20px;
         }
 
         .paymentOwner {
-        }
-
-        & + .paymentMethod {
-          margin-top: 20px;
+          margin-left: auto;
         }
       }
     }

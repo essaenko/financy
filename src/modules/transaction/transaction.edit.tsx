@@ -19,7 +19,7 @@ import { NetworkComponentStatusList } from '../../api/api.handler';
 
 export const TransactionEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
-  const { collection: payments, status: paymentsStatus } = state.payment;
+  const { collection: payments, status: paymentsStatus } = state.payment.method;
   const { collection: categories, status: categoriesStatus } = state.categories;
   const { collection: transactions, status } = state.transaction;
   const transaction = transactions.find(
@@ -64,7 +64,7 @@ export const TransactionEdit = observer((): JSX.Element => {
 
   useEffect(() => {
     if (paymentsStatus === NetworkComponentStatusList.Untouched) {
-      state.payment.fetchPaymentMethods();
+      state.payment.method.fetchPaymentMethods();
     }
 
     if (categoriesStatus === NetworkComponentStatusList.Untouched) {
@@ -213,7 +213,8 @@ export const TransactionEdit = observer((): JSX.Element => {
             </option>
             {payments.map(payment => (
               <option key={payment.id} value={payment.id}>
-                {payment.name}
+                {payment.name} ({payment.account?.name}) ---{' '}
+                {payment.owner?.name}
               </option>
             ))}
           </select>

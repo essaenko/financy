@@ -30,12 +30,12 @@ export const TransactionCreate = observer((): JSX.Element => {
   const [transactionFormType, setTransactionFormType] =
     useState<TransactionFormTypeList>(TransactionFormTypeList.Transaction);
   const history = useHistory();
-  const { collection: payments, status: paymentsStatus } = state.payment;
+  const { collection: payments, status: paymentsStatus } = state.payment.method;
   const { collection: categories, status: categoriesStatus } = state.categories;
 
   useEffect(() => {
     if (paymentsStatus === NetworkComponentStatusList.Untouched) {
-      state.payment.fetchPaymentMethods();
+      state.payment.method.fetchPaymentMethods();
     }
 
     if (categoriesStatus === NetworkComponentStatusList.Untouched) {
@@ -196,7 +196,8 @@ export const TransactionCreate = observer((): JSX.Element => {
             </option>
             {payments.map(payment => (
               <option key={payment.id} value={payment.id}>
-                {payment.name}
+                {payment.name} ({payment.account?.name}) ---{' '}
+                {payment.owner?.name}
               </option>
             ))}
           </select>
@@ -266,7 +267,8 @@ export const TransactionCreate = observer((): JSX.Element => {
                 .filter(p => p.id !== payment)
                 .map(payment => (
                   <option value={payment.id} key={payment.id}>
-                    {payment.name}
+                    {payment.name} ({payment.account?.name}){' '}
+                    {payment.owner?.name}
                   </option>
                 ))}
             </select>

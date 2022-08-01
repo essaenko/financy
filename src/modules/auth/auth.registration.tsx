@@ -117,7 +117,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
           {formState === FormStateList.InvalidName && 'Incorrect name'}
           {formState === FormStateList.InvalidPassword && 'Invalid password'}
           {formState === FormStateList.EmailAlreadyRegistered &&
-            'User with this email already registereg, try to login or reset your password'}
+            'User with this email already registered, try to login or reset your password'}
         </span>
         <div className={css.regSubmitWrapper}>
           <button className={css.regSubmit} onClick={onSubmit}>

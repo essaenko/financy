@@ -1,17 +1,14 @@
+import { AccountModel } from 'models/account.model';
 import { makeAutoObservable, runInAction } from 'mobx';
-import { AccountModel } from './account.model';
+import { APIParsedResponse, NetworkComponentStatusList } from 'api/api.handler';
 import {
-  createPaymentMethod,
-  fetchPaymentMethods,
-  removePaymentMethod,
-  updatePaymentMethod,
-} from '../api/api.payment';
-import {
-  APIParsedResponse,
-  NetworkComponentStatusList,
-} from '../api/api.handler';
+  createPaymentAccount,
+  fetchPaymentAccounts,
+  removePaymentAccount,
+  updatePaymentAccount,
+} from 'api/api.payment';
 
-export interface PaymentMethodModel {
+export interface PaymentAccountModel {
   id: number | undefined;
   account: AccountModel | undefined;
   name: string | undefined;
@@ -21,7 +18,7 @@ export interface PaymentMethodModel {
   updatedAt: string | undefined;
 }
 
-export class PaymentMethodState implements PaymentMethodModel {
+export class PaymentAccountState implements PaymentAccountModel {
   id: number | undefined;
   account: AccountModel | undefined;
   name: string | undefined;
@@ -34,7 +31,7 @@ export class PaymentMethodState implements PaymentMethodModel {
     makeAutoObservable(this);
   }
 
-  setState(payment: PaymentMethodModel) {
+  setState(payment: PaymentAccountModel) {
     this.id = payment.id;
     this.account = payment.account;
     this.name = payment.name;
@@ -45,8 +42,8 @@ export class PaymentMethodState implements PaymentMethodModel {
   }
 }
 
-export class PaymentMethodCollectionState {
-  collection: PaymentMethodState[] = [];
+export class PaymentAccountCollectionState {
+  collection: PaymentAccountState[] = [];
   status: NetworkComponentStatusList = NetworkComponentStatusList.Untouched;
 
   constructor() {
@@ -54,7 +51,7 @@ export class PaymentMethodCollectionState {
   }
 
   async removePayment(id: number): Promise<APIParsedResponse<void>> {
-    const result = await removePaymentMethod(id);
+    const result = await removePaymentAccount(id);
 
     if (result.success) {
       runInAction(() => {
@@ -69,11 +66,11 @@ export class PaymentMethodCollectionState {
     name: string,
     description: string,
     remains: number,
-  ): Promise<APIParsedResponse<PaymentMethodModel>> {
-    const result = await createPaymentMethod(name, description, remains);
+  ): Promise<APIParsedResponse<PaymentAccountModel>> {
+    const result = await createPaymentAccount(name, description, remains);
 
     if (result.success && result.payload) {
-      await this.fetchPaymentMethods();
+      await this.fetchPaymentAccounts();
     }
 
     return result;
@@ -84,8 +81,8 @@ export class PaymentMethodCollectionState {
     name: string,
     description: string,
     remains: number,
-  ): Promise<APIParsedResponse<PaymentMethodModel>> {
-    const result = await updatePaymentMethod(id, name, description, remains);
+  ): Promise<APIParsedResponse<PaymentAccountModel>> {
+    const result = await updatePaymentAccount(id, name, description, remains);
 
     if (result.success) {
       runInAction(() => {
@@ -98,21 +95,21 @@ export class PaymentMethodCollectionState {
     return result;
   }
 
-  async fetchPaymentMethods(): Promise<
-    APIParsedResponse<PaymentMethodModel[]>
+  async fetchPaymentAccounts(): Promise<
+    APIParsedResponse<PaymentAccountModel[]>
   > {
     runInAction(() => {
       this.status = NetworkComponentStatusList.Loading;
     });
 
-    const result = await fetchPaymentMethods();
+    const result = await fetchPaymentAccounts();
 
     if (result.success && result.payload) {
       runInAction(() => {
         this.status = NetworkComponentStatusList.Loaded;
         this.collection =
           result.payload?.map(payment => {
-            const instance = new PaymentMethodState();
+            const instance = new PaymentAccountState();
             instance.setState(payment);
 
             return instance;

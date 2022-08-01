@@ -135,7 +135,7 @@ export const StyledLineChart = React.memo(
     width,
     height,
     dateFormat = 'd LLL',
-    tooltipTitle = 'Sum',
+    tooltipTitle,
     showLegend,
     dataKeys,
     xDataKey = 'date',

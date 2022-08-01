@@ -9,28 +9,47 @@ import React, {
 import { observer } from 'mobx-react-lite';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
+import { APIParsedResponse, NetworkComponentStatusList } from 'api/api.handler';
+import { PaymentFormTypeList } from 'modules/payment/payment';
+import { useQuery } from 'utils/url.utils';
+
 import { state } from '../../models';
 
 import css from './payment.module.css';
-import { NetworkComponentStatusList } from '../../api/api.handler';
+import { PaymentAccountModel } from 'models/payment.account.model';
+import { PaymentMethodModel } from 'models/payment.method.model';
 
 export const PaymentEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
-  const { collection: payments, status } = state.payment;
-  const payment = payments.find(p => p.id === +match.params.id);
-  const [name, setName] = useState<string>(payment?.name ?? '');
-  const [description, setDescription] = useState<string>(
-    payment?.description ?? '',
+  const query = useQuery();
+  const formType = query.get('type') as keyof typeof PaymentFormTypeList;
+  const { collection: accounts, status: accountsStatus } =
+    state.payment.account;
+  const { collection: methods, status: methodsStatus } = state.payment.method;
+  const payment = methods.find(p => p.id === +match.params.id);
+  const account = accounts.find(acc => acc.id === +match.params.id);
+  const [name, setName] = useState<string>(
+    (formType === PaymentFormTypeList.Account
+      ? account?.name
+      : payment?.name) ?? '',
   );
-  const [remains, setRemains] = useState<number | undefined>(payment?.remains);
+  const [description, setDescription] = useState<string>(
+    (formType === PaymentFormTypeList.Account
+      ? account?.description
+      : payment?.description) ?? '',
+  );
+  const [remains, setRemains] = useState<number | undefined>(account?.remains);
   const [notification, setNotification] = useState<string>('');
   const history = useHistory();
 
   useEffect(() => {
-    if (status === NetworkComponentStatusList.Untouched) {
-      state.payment.fetchPaymentMethods();
+    if (methodsStatus === NetworkComponentStatusList.Untouched) {
+      state.payment.method.fetchPaymentMethods();
     }
-  }, [status]);
+    if (accountsStatus === NetworkComponentStatusList.Untouched) {
+      state.payment.account.fetchPaymentAccounts();
+    }
+  }, [methodsStatus, accountsStatus]);
 
   useEffect(() => {
     if (payment?.name) {
@@ -62,12 +81,22 @@ export const PaymentEdit = observer((): JSX.Element => {
       }
 
       if (payment?.id) {
-        const result = await state.payment.updatePayment(
-          payment?.id,
-          name,
-          description,
-          remains ?? 0,
-        );
+        let result: APIParsedResponse<PaymentAccountModel | PaymentMethodModel>;
+
+        if (formType === PaymentFormTypeList.Account) {
+          result = await state.payment.account.updatePayment(
+            payment.id,
+            name,
+            description,
+            remains ?? 0,
+          );
+        } else {
+          result = await state.payment.method.updatePayment(
+            payment.id,
+            name,
+            description,
+          );
+        }
 
         if (result.success) {
           history.push('/dashboard/payment');
@@ -80,12 +109,18 @@ export const PaymentEdit = observer((): JSX.Element => {
 
       return void 0;
     },
-    [name, payment, description, remains, history],
+    [name, payment?.id, formType, description, remains, history],
   );
 
   const onRemove = useCallback(async () => {
     if (payment?.id) {
-      const result = await state.payment.removePayment(payment?.id);
+      let result: APIParsedResponse<void>;
+
+      if (formType === PaymentFormTypeList.Account) {
+        result = await state.payment.account.removePayment(payment?.id);
+      } else {
+        result = await state.payment.method.removePayment(payment?.id);
+      }
 
       if (result.success) {
         history.push('/dashboard/payment');
@@ -93,13 +128,16 @@ export const PaymentEdit = observer((): JSX.Element => {
         setNotification('Something went wrong, please try again');
       }
     }
-  }, [history, payment]);
+  }, [formType, history, payment?.id]);
 
   return (
     <div>
       <div>
         <Link to="/dashboard/payment">Back</Link>
-        <h2>Edit payment method</h2>
+        <h2>
+          Edit payment{' '}
+          {formType === PaymentFormTypeList.Account ? 'account' : 'method'}
+        </h2>
       </div>
       <div className={css.createForm}>
         <form>
@@ -115,12 +153,14 @@ export const PaymentEdit = observer((): JSX.Element => {
             placeholder="Description"
             onChange={onChangeFactory<string>(setDescription)}
           />
-          <input
-            type="number"
-            value={remains}
-            placeholder="Remains"
-            onChange={onChangeFactory<number>(setRemains)}
-          />
+          {formType === PaymentFormTypeList.Account && (
+            <input
+              type="number"
+              value={remains}
+              placeholder="Remains"
+              onChange={onChangeFactory<number>(setRemains)}
+            />
+          )}
           <div className={css.editActions}>
             <button onClick={onSubmit}>Save</button>
             <span className={css.removeAction} onClick={onRemove}>

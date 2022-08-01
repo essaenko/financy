@@ -3,6 +3,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  overflow: hidden scroll;
 
   @media screen and (max-width: 414px) {
     padding-bottom: 80px;

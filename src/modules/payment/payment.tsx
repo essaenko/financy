@@ -10,9 +10,16 @@ import { state } from '../../models';
 
 import css from './payment.module.css';
 
+export enum PaymentFormTypeList {
+  Account = 'Account',
+  Method = 'Method',
+}
+
 export const Payment = observer((): JSX.Element => {
   useEffect(() => {
-    state.payment.fetchPaymentMethods();
+    state.payment.account.fetchPaymentAccounts().then(async () => {
+      await state.payment.method.fetchPaymentMethods();
+    });
   }, []);
   return (
     <div className={css.root}>
