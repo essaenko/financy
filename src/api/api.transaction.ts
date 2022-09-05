@@ -6,8 +6,14 @@ import {
 import {
   TransactionModel,
   TransactionTypeList,
-} from '../models/transaction.model';
+} from 'models/transaction.model';
 import { api } from './api.transport';
+
+export const uploadTransactions = async (
+  data: FormData,
+): Promise<APIParsedResponse<void>> => {
+  return requestHandler(api.upload('/transaction/import', data));
+};
 
 export const fetchTransactions = async (
   page: number,

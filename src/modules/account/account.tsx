@@ -84,14 +84,14 @@ export const Account = observer((): JSX.Element => {
       setChangePasswordNotification('');
       if (newPassword !== newPasswordConfirm) {
         setChangePasswordNotification(
-          'New password and Confirm password are not the same',
+          'Новый пароль и подтверждение пароля должны совпадать',
         );
 
         return;
       }
       if (currentPassword === newPassword) {
         setChangePasswordNotification(
-          "New password shouldn't be the same as current password",
+          'Новый пароль не должен совпадать с старым паролем',
         );
 
         return;
@@ -100,13 +100,13 @@ export const Account = observer((): JSX.Element => {
       const result = await user.updatePassword(currentPassword, newPassword);
 
       if (result.success) {
-        setChangePasswordNotification('Password successfully changed');
+        setChangePasswordNotification('Пароль успешно изменен');
         setCurrentPassword('');
         setNewPassword('');
         setNewPasswordConfirm('');
       } else {
         setChangePasswordNotification(
-          'There was something wrong. Plase try again later',
+          'Что-то пошло не так... Попробуйте еще раз',
         );
       }
     },
@@ -115,47 +115,47 @@ export const Account = observer((): JSX.Element => {
 
   return (
     <div className={css.root}>
-      <h2>Account</h2>
+      <h2>Аккаунт</h2>
       <div className={css.ownerData}>
-        Account owner: {state.account.owner?.name} (
+        Владелец: {state.account.owner?.name} (
         <a href={`mailto:${state.account.owner?.email}`}>
           {state.account.owner?.email}
         </a>
         )
       </div>
-      <div className={css.ownerData}>Name: {user.name}</div>
+      <div className={css.ownerData}>Имя: {user.name}</div>
       <div className={css.ownerData}>E-mail: {user.email}</div>
       <form>
-        <button onClick={onLogout}>Exit</button>
+        <button onClick={onLogout}>Выйти</button>
       </form>
-      <h3>Change your password</h3>
+      <h3>Изменить пароль</h3>
       <form>
         <input
           type="password"
           autoComplete="off"
           value={currentPassword}
-          placeholder="Current password"
+          placeholder="Текущий пароль"
           onChange={onChangeFactory(setCurrentPassword)}
         />
         <input
           type="password"
           autoComplete="off"
           value={newPassword}
-          placeholder="New password"
+          placeholder="Новый пароль"
           onChange={onChangeFactory(setNewPassword)}
         />
         <input
           type="password"
           autoComplete="off"
           value={newPasswordConfirm}
-          placeholder="Confirm password"
+          placeholder="Повторите новый пароль"
           onChange={onChangeFactory(setNewPasswordConfirm)}
         />
         <span>{changePasswordNotification}</span>
-        <button onClick={onChangePassword}>Save</button>
+        <button onClick={onChangePassword}>Сохранить</button>
       </form>
       <div className={css.family}>
-        <h3>Family users:</h3>
+        <h3>Пользователи аккаунта:</h3>
         {}
         {users.map(user => (
           <div key={user.id}>
@@ -166,35 +166,35 @@ export const Account = observer((): JSX.Element => {
                 to="/dashboard/account"
                 onClick={onRemoveUserFromAccount(user.email as string)}
               >
-                Remove
+                Удалить
               </Link>
             )}
           </div>
         ))}
         {users.length === 1 && (
-          <div className={css.emptyList}>No additional users...</div>
+          <div className={css.emptyList}>Нет других пользователей...</div>
         )}
       </div>
       <div className={css.pendingRequests}>
-        {fRequests.length > 0 && <h3>Pending requests:</h3>}
+        {fRequests.length > 0 && <h3>Запросы:</h3>}
         {fRequests.map(request => (
           <div key={request.id} className={css.pendingRequest}>
             {request.user} -{' '}
             <Link to="/dashboard/account" onClick={onApproveRequest(request)}>
-              Approve
+              Добавить
             </Link>{' '}
             <Link
               className={css.rejectRequest}
               to="/dashboard/account"
               onClick={onRejectRequest(request)}
             >
-              Reject
+              Отклонить
             </Link>
           </div>
         ))}
       </div>
       <a className={css.footerLink} href="mailto:support@financy.live">
-        Support
+        Поддержка
       </a>
       <span>Financy © 2022</span>
     </div>

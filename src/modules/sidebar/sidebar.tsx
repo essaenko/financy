@@ -12,38 +12,45 @@ export const Sidebar = (): JSX.Element => {
         className={css.link}
         activeClassName={css.activeLink}
       >
-        <span>Transactions</span>
+        <span>Операции</span>
       </NavLink>
       <NavLink
         to="/dashboard/stats"
         className={css.link}
         activeClassName={css.activeLink}
       >
-        <span>Statistics</span>
+        <span>Статистика</span>
       </NavLink>
       <NavLink
         to="/dashboard/payment"
         className={css.link}
         activeClassName={css.activeLink}
       >
-        <span>Payment methods</span>
+        <span>Счета</span>
       </NavLink>
       <NavLink
         to="/dashboard/category"
         className={css.link}
         activeClassName={css.activeLink}
       >
-        <span>Categories</span>
+        <span>Категории</span>
       </NavLink>
       <NavLink
         to="/dashboard/account"
         className={css.link}
         activeClassName={css.activeLink}
       >
-        <span>Family</span>
+        <span>Аккаунт</span>
+      </NavLink>
+      <NavLink
+        to="/dashboard/transaction/import"
+        className={css.link}
+        activeClassName={css.activeLink}
+      >
+        <span>Импорт</span>
       </NavLink>
       <a className={css.footerLink} href="mailto:support@financy.live">
-        Support
+        Поддержка
       </a>
       <span className={css.footerItem}>Financy © 2022</span>
     </div>

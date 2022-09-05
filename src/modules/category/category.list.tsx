@@ -52,7 +52,7 @@ export const CategoryList = observer((): JSX.Element => {
     <>
       <div className={css.header}>
         <h2>
-          Categories{' '}
+          Категории{' '}
           <Link to="/dashboard/category/create" className={css.mobileLink}>
             <PlusIcon className={css.icon} />
           </Link>
@@ -64,15 +64,15 @@ export const CategoryList = observer((): JSX.Element => {
           elements={[
             {
               id: CategoryTypeList.All,
-              text: 'All',
+              text: 'Все',
             },
             {
               id: CategoryTypeList.Income,
-              text: 'Income',
+              text: 'Доходы',
             },
             {
               id: CategoryTypeList.Outcome,
-              text: 'Outcome',
+              text: 'Расходы',
             },
           ]}
         />
@@ -82,13 +82,13 @@ export const CategoryList = observer((): JSX.Element => {
       </div>
       <div className={css.categoriesOwner}>
         {status === NetworkComponentStatusList.Loading && (
-          <div className={css.loader}>Loading categories...</div>
+          <div className={css.loader}>Загружаем категории...</div>
         )}
         {status === NetworkComponentStatusList.Loaded &&
           Object.values(categories).map(deepRender)}
         {status === NetworkComponentStatusList.Failed && (
           <div className={css.loader}>
-            Some error occurred while fetching categories...
+            Что-то пошло не так...
             <ReloadIcon className={css.icon} onClick={refreshList} />
           </div>
         )}

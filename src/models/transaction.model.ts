@@ -10,12 +10,12 @@ import {
   fetchTransactions,
   updateTransaction,
   removeTransaction,
-} from '../api/api.transaction';
+} from 'api/api.transaction';
 import {
   APIErrorList,
   APIParsedResponse,
   NetworkComponentStatusList,
-} from '../api/api.handler';
+} from 'api/api.handler';
 
 export enum TransactionTypeList {
   All = 'All',
@@ -159,7 +159,7 @@ export class TransactionCollectionState {
 
     const result = await fetchTransactions(
       filters?.page ?? this.page,
-      filters?.perPage ?? 20,
+      filters?.perPage ?? 30,
       filters?.type,
       filters?.category,
       filters?.dateFrom,

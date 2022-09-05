@@ -3,11 +3,10 @@ import React, {
   Dispatch,
   MouseEvent,
   SetStateAction,
-  useEffect,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
 import css from 'modules/auth/auth.module.css';
@@ -78,7 +77,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         <h2>Registration</h2>
         <input
           type="text"
-          placeholder="Full name"
+          placeholder="Имя"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidName,
           })}
@@ -96,7 +95,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Пароль"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidPassword,
           })}
@@ -105,7 +104,7 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="password"
-          placeholder="Repeat password"
+          placeholder="Повторите пароль"
           className={classnames(css.field, {
             [css.invalidField]: formState === FormStateList.InvalidPassword,
           })}
@@ -113,19 +112,19 @@ export const AuthRegistration = observer(({ user }: PropsType): JSX.Element => {
           onChange={onChangeFactory(setPasswordCopy)}
         />
         <span>
-          {formState === FormStateList.InvalidEmail && 'Incorrect email'}
-          {formState === FormStateList.InvalidName && 'Incorrect name'}
-          {formState === FormStateList.InvalidPassword && 'Invalid password'}
+          {formState === FormStateList.InvalidEmail && 'Некорректный E-mail'}
+          {formState === FormStateList.InvalidName && 'Некорректное имя'}
+          {formState === FormStateList.InvalidPassword && 'Неподходящий пароль'}
           {formState === FormStateList.EmailAlreadyRegistered &&
-            'User with this email already registered, try to login or reset your password'}
+            'Пользователь с таким E-mail уже зарегистрирован. Попробуйте войти или восстановить пароль.'}
         </span>
         <div className={css.regSubmitWrapper}>
           <button className={css.regSubmit} onClick={onSubmit}>
-            Done
+            Готово
           </button>
         </div>
         <Link to="/" className={css.link}>
-          Already have account
+          Уже есть аккаунт
         </Link>
       </form>
     </div>

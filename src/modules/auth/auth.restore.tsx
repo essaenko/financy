@@ -3,7 +3,6 @@ import React, {
   Dispatch,
   MouseEvent,
   SetStateAction,
-  useEffect,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -37,13 +36,13 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
     const result = await user.restorePassword(email);
 
     if (result.errorCode === APIErrorList.ServiceUnreachableException) {
-      setNotification('Service temporary unreachable, please try again later');
+      setNotification('Сервис временно недоступен. Повторите попытку позже');
       setDisabled(false);
     }
 
     if (result.success) {
       setNotification(
-        "We'll send email with instructions if user with this email exists. Check your mailbox (mail can be in Spam folder).",
+        'Мы отправим письмо с инструкциями если аккаунт с таким E-mail зарегистрирован. Проверьте ваш E-mail ящик (письмо могло попасть в папку Спам)',
       );
 
       setTimeout(() => {
@@ -55,10 +54,10 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Restore password</h2>
+        <h2>Сбросить пароль</h2>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="E-mail"
           className={css.field}
           value={email}
           onChange={onChangeFactory(setEmail)}
@@ -66,10 +65,10 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
         />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit} disabled={disabled}>
-          Restore
+          Сбросить
         </button>
         <Link to="/" className={css.link}>
-          Back
+          Назад
         </Link>
       </form>
     </div>

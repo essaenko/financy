@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { TransactionList } from 'modules/transaction/transaction.list';
 import { TransactionCreate } from 'modules/transaction/transaction.create';
 import { TransactionEdit } from 'modules/transaction/transaction.edit';
+import { TransactionImport } from 'modules/transaction/transaction.import';
 
 import css from './transaction.module.css';
 
@@ -16,6 +17,9 @@ export const Transaction = observer((): JSX.Element => {
       </Route>
       <Route path="/dashboard/transaction/create">
         <TransactionCreate />
+      </Route>
+      <Route path="/dashboard/transaction/import">
+        <TransactionImport />
       </Route>
       <Route path="/dashboard/transaction/edit/:id" exact>
         <TransactionEdit />

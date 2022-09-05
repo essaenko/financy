@@ -13,11 +13,11 @@ import { APIParsedResponse, NetworkComponentStatusList } from 'api/api.handler';
 import { PaymentFormTypeList } from 'modules/payment/payment';
 import { useQuery } from 'utils/url.utils';
 
-import { state } from '../../models';
-
-import css from './payment.module.css';
+import { state } from 'models';
 import { PaymentAccountModel } from 'models/payment.account.model';
 import { PaymentMethodModel } from 'models/payment.method.model';
+
+import css from './payment.module.css';
 
 export const PaymentEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
@@ -75,7 +75,7 @@ export const PaymentEdit = observer((): JSX.Element => {
       setNotification('');
 
       if (!name) {
-        setNotification("Name can't be empty");
+        setNotification('Название не может быть пустым');
 
         return void 0;
       }
@@ -102,7 +102,7 @@ export const PaymentEdit = observer((): JSX.Element => {
           history.push('/dashboard/payment');
         } else {
           setNotification(
-            'Some error occurred while editing this payment method, try again or comeback later',
+            'Что-то пошло не так, пожалуйста повторите попытку или вернитесь познее',
           );
         }
       }
@@ -125,7 +125,9 @@ export const PaymentEdit = observer((): JSX.Element => {
       if (result.success) {
         history.push('/dashboard/payment');
       } else {
-        setNotification('Something went wrong, please try again');
+        setNotification(
+          'Что-то пошло не так, пожалуйста повторите попытку или вернитесь познее',
+        );
       }
     }
   }, [formType, history, payment?.id]);
@@ -135,8 +137,10 @@ export const PaymentEdit = observer((): JSX.Element => {
       <div>
         <Link to="/dashboard/payment">Back</Link>
         <h2>
-          Edit payment{' '}
-          {formType === PaymentFormTypeList.Account ? 'account' : 'method'}
+          Изменить{' '}
+          {formType === PaymentFormTypeList.Account
+            ? 'счет'
+            : 'средство платежа'}
         </h2>
       </div>
       <div className={css.createForm}>
@@ -144,27 +148,27 @@ export const PaymentEdit = observer((): JSX.Element => {
           <input
             type="text"
             value={name}
-            placeholder="Name"
+            placeholder="Название"
             onChange={onChangeFactory<string>(setName)}
           />
           <input
             type="text"
             value={description}
-            placeholder="Description"
+            placeholder="Описание"
             onChange={onChangeFactory<string>(setDescription)}
           />
           {formType === PaymentFormTypeList.Account && (
             <input
               type="number"
               value={remains}
-              placeholder="Remains"
+              placeholder="Остаток"
               onChange={onChangeFactory<number>(setRemains)}
             />
           )}
           <div className={css.editActions}>
-            <button onClick={onSubmit}>Save</button>
+            <button onClick={onSubmit}>Сохранить</button>
             <span className={css.removeAction} onClick={onRemove}>
-              Remove
+              Удалить
             </span>
           </div>
           {notification && <span>{notification}</span>}

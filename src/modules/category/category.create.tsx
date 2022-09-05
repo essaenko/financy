@@ -4,13 +4,15 @@ import React, {
   useState,
   MouseEvent,
   useCallback,
+  Dispatch,
+  SetStateAction,
 } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
 import { normalizeTree } from 'utils/collection.utils';
-import { CategoryModel, CategoryTypeList } from '../../models/category.model';
-import { state } from '../../models';
+import { CategoryModel, CategoryTypeList } from 'models/category.model';
+import { state } from 'models';
 
 import css from './category.module.css';
 
@@ -18,6 +20,7 @@ export const CategoryCreate = observer((): JSX.Element => {
   const [name, setName] = useState<string>('');
   const [type, setType] = useState<CategoryTypeList>(CategoryTypeList.Income);
   const [parent, setParent] = useState<number>(-1);
+  const [mcc, setMcc] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
   const { collection } = state.categories;
   const history = useHistory();
@@ -29,22 +32,23 @@ export const CategoryCreate = observer((): JSX.Element => {
     [collection, type],
   );
 
-  const onCategoryTypeChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setType(event.currentTarget.value as CategoryTypeList);
-  };
-  const onParentChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setParent(+event.currentTarget.value);
-  };
-  const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.currentTarget.value);
-  };
+  const onChangeFactory = useCallback(
+    <T extends any>(setter: Dispatch<SetStateAction<T>>) =>
+      ({
+        currentTarget: { value },
+      }: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+        setter(value as T);
+      },
+    [],
+  );
+
   const onSubmit = useCallback(
     async (event: MouseEvent<HTMLButtonElement>): Promise<void> => {
       event.preventDefault();
       setNotification('');
 
       if (!name) {
-        setNotification("Name can't be empty");
+        setNotification('Название не может быть пустым');
 
         return void 0;
       }
@@ -55,7 +59,7 @@ export const CategoryCreate = observer((): JSX.Element => {
         history.push('/dashboard/category');
       } else {
         setNotification(
-          'Some error occurred while creating new category, please try again or comeback later',
+          'Что-то пошло не так, повторите попытку или вернитесь позднее',
         );
       }
 
@@ -68,35 +72,35 @@ export const CategoryCreate = observer((): JSX.Element => {
     <div>
       <Link to="/dashboard/category">Back</Link>
       <br />
-      <h2>New category</h2>
+      <h2>Новая категория</h2>
       <div className={css.categoryCreate}>
         <form>
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Название"
             value={name}
-            onChange={onNameChange}
+            onChange={onChangeFactory(setName)}
           />
-          <select onChange={onCategoryTypeChange} value={type}>
+          <select onChange={onChangeFactory(setType)} value={type}>
             <option value={0} disabled>
-              Category type
+              Тип категории
             </option>
             <option
               key={CategoryTypeList.Income}
               value={CategoryTypeList.Income}
             >
-              Income
+              Доходы
             </option>
             <option
               key={CategoryTypeList.Outcome}
               value={CategoryTypeList.Outcome}
             >
-              Outcome
+              Расходы
             </option>
           </select>
-          <select value={parent} onChange={onParentChange}>
+          <select value={parent} onChange={onChangeFactory(setParent)}>
             <option value={-1} disabled>
-              Attach category to
+              Добавить категорию к
             </option>
             <option value={0}>None</option>
             {Object.values(categories).map(category => {
@@ -107,7 +111,13 @@ export const CategoryCreate = observer((): JSX.Element => {
               );
             })}
           </select>
-          <button onClick={onSubmit}>Create</button>
+          <input
+            type="text"
+            placeholder="MCC коды категории (перечислите коды через запятую)"
+            value={mcc}
+            onChange={onChangeFactory(setMcc)}
+          />
+          <button onClick={onSubmit}>Создать</button>
           <span>{notification}</span>
         </form>
       </div>

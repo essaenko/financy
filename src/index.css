@@ -107,6 +107,9 @@ form {
     display: block;
     padding: 10px 5px;
   }
+  input[type=file] {
+    border: 0;
+  }
   input,
   select {
     width: 100%;
@@ -121,6 +124,7 @@ form {
     outline: none;
     box-sizing: border-box;
     -webkit-appearance: none;
+    max-width: 400px;
 
     @media screen and (max-width: 414px) {
       height: 35px;

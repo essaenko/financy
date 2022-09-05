@@ -66,15 +66,14 @@ export const DashboardAccount = observer((): JSX.Element => {
       {status === NetworkComponentStatusList.Failed &&
         error === APIErrorList.NoUserAccountException && (
           <form className={css.accountPopup}>
-            No account found. <br />
-            You can create your own account, or join <br /> your family with
-            existed account
+            Мы не нашли вашего семейного аккаунта.
+            <br />
+            Вы можете создать свой или присоединиться <br /> к существующему
+            аккаунту
             {fRequests.length === 0 && (
               <>
                 {formType === FormTypeList.CreateAccount && (
-                  <button onClick={onCreateNewAccount}>
-                    Create my own account
-                  </button>
+                  <button onClick={onCreateNewAccount}>Создать новый</button>
                 )}
                 {formType === FormTypeList.JoinFamily && (
                   <div className={css.joinForm}>
@@ -100,8 +99,8 @@ export const DashboardAccount = observer((): JSX.Element => {
                   }}
                 >
                   {formType === FormTypeList.CreateAccount
-                    ? 'Join family'
-                    : 'Create new account'}
+                    ? 'Присоедениться к существующему'
+                    : 'Создать новый'}
                 </Link>
               </>
             )}
@@ -109,9 +108,9 @@ export const DashboardAccount = observer((): JSX.Element => {
               <>
                 <br />
                 <br />
-                Awaiting request approve <br />
-                Request to {fRequests[0].owner} -{' '}
-                {fRequests[0].isActive ? 'Awaiting' : 'Rejected'}
+                Запросы ожидающие подтверждения <br />
+                Запрос к {fRequests[0].owner} -{' '}
+                {fRequests[0].isActive ? 'Ожидает' : 'Отклонен'}
               </>
             )}
           </form>

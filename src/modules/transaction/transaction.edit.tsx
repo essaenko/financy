@@ -10,12 +10,12 @@ import { observer } from 'mobx-react-lite';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 
 import { TransactionFormTypeList } from 'modules/transaction/transaction.types';
-import { TransactionTypeList } from '../../models/transaction.model';
+import { TransactionTypeList } from 'models/transaction.model';
+import { CategoryTypeList } from 'models/category.model';
+import { NetworkComponentStatusList } from 'api/api.handler';
 import { state } from '../../models';
 
 import css from './transaction.module.css';
-import { CategoryTypeList } from '../../models/category.model';
-import { NetworkComponentStatusList } from '../../api/api.handler';
 
 export const TransactionEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
@@ -101,8 +101,8 @@ export const TransactionEdit = observer((): JSX.Element => {
       if (payment === 0) {
         setNotification(
           transactionFormType === TransactionFormTypeList.Transaction
-            ? 'Choose payment method for this transaction'
-            : 'Select from payment method',
+            ? 'Выберите средство платежа для этой операции'
+            : 'Выберите карту отправителя',
         );
 
         return void 0;
@@ -112,13 +112,13 @@ export const TransactionEdit = observer((): JSX.Element => {
         transactionFormType === TransactionFormTypeList.Transaction &&
         category === 0
       ) {
-        setNotification('Select category for this transaction');
+        setNotification('Выберите категорию операции');
 
         return void 0;
       }
 
       if (cost === 0) {
-        setNotification("Cost can't be less than 1 RUB");
+        setNotification('Сумма не может быть меньше 1 RUB');
 
         return void 0;
       }
@@ -149,7 +149,7 @@ export const TransactionEdit = observer((): JSX.Element => {
           history.push('/dashboard/transaction');
         } else {
           setNotification(
-            'Some error occurred while editing this transaction, please try again or comeback later',
+            'Что-то пошло не так, повторите попытку или вернитесь позднее',
           );
         }
       }
@@ -177,7 +177,9 @@ export const TransactionEdit = observer((): JSX.Element => {
       if (result.success) {
         history.push('/dashboard/transaction');
       } else {
-        setNotification('Something went wrong, please try again');
+        setNotification(
+          'Что-то пошло не так, повторите попытку или вернитесь позднее',
+        );
       }
     }
   }, [history, transaction]);
@@ -191,13 +193,13 @@ export const TransactionEdit = observer((): JSX.Element => {
             search: history.location.search,
           }}
         >
-          Back
+          Назад
         </Link>
         <h2>
-          Edit{' '}
+          Изменить{' '}
           {transactionFormType === TransactionFormTypeList.Transaction
-            ? 'transaction'
-            : 'transfer'}
+            ? 'операцию'
+            : 'перевод'}
         </h2>
       </div>
       <div className={css.transactionCreate}>
@@ -208,8 +210,8 @@ export const TransactionEdit = observer((): JSX.Element => {
           >
             <option value={0} disabled key={0}>
               {transactionFormType === TransactionFormTypeList.Transaction
-                ? 'Payment method'
-                : 'From payment'}
+                ? 'Средство платежа'
+                : 'Карта отправителя'}
             </option>
             {payments.map(payment => (
               <option key={payment.id} value={payment.id}>
@@ -224,19 +226,19 @@ export const TransactionEdit = observer((): JSX.Element => {
               onChange={onChangeFactory<TransactionTypeList>(setType)}
             >
               <option value="0" disabled key={0}>
-                Transaction type
+                Тип операции
               </option>
               <option
                 key={TransactionTypeList.Income}
                 value={TransactionTypeList.Income}
               >
-                Income
+                Доходы
               </option>
               <option
                 key={TransactionTypeList.Outcome}
                 value={TransactionTypeList.Outcome}
               >
-                Outcome
+                Расходы
               </option>
             </select>
           )}
@@ -246,7 +248,7 @@ export const TransactionEdit = observer((): JSX.Element => {
               onChange={onChangeFactory<number>(setCategory)}
             >
               <option value={0} disabled key={0}>
-                Category
+                Категория
               </option>
               {categories
                 .filter(
@@ -263,11 +265,7 @@ export const TransactionEdit = observer((): JSX.Element => {
           )}
           <input
             type="number"
-            placeholder={
-              transactionFormType === TransactionFormTypeList.Transaction
-                ? 'Cost'
-                : 'Amount'
-            }
+            placeholder="Сумма"
             value={cost}
             onChange={onChangeFactory<number>(setCost)}
           />
@@ -277,7 +275,7 @@ export const TransactionEdit = observer((): JSX.Element => {
               onChange={onChangeFactory<number>(setTransfer)}
             >
               <option value={0} disabled key={0}>
-                To payment
+                Карта получателя
               </option>
               {payments
                 .filter(p => p.id !== payment)
@@ -290,14 +288,14 @@ export const TransactionEdit = observer((): JSX.Element => {
           )}
           <input
             type="text"
-            placeholder="Comment"
+            placeholder="Коментарий"
             value={comment}
             onChange={onChangeFactory<string>(setComment)}
           />
           <div className={css.editActions}>
-            <button onClick={onSubmit}>Save</button>
+            <button onClick={onSubmit}>Сохранить</button>
             <span className={css.removeAction} onClick={onRemove}>
-              Remove
+              Удалить
             </span>
           </div>
           {notification && <span>{notification}</span>}

@@ -16,7 +16,7 @@ export const PaymentList = observer(() => {
   return (
     <>
       <div className={css.header}>
-        <h2>Payment accounts</h2>
+        <h2>Банковские счета</h2>
         <Link to="/dashboard/payment/create?type=Account">
           <PlusIcon className={css.icon} />
         </Link>
@@ -24,18 +24,16 @@ export const PaymentList = observer(() => {
       <div className={css.content}>
         {methodsStatus === NetworkComponentStatusList.Loading &&
           methods.length === 0 && (
-            <div className={css.loader}>
-              Loading available payment methods...
-            </div>
+            <div className={css.loader}>Загружаем средства платежа...</div>
           )}
         {accounts.length === 0 &&
           accountsStatus === NetworkComponentStatusList.Loaded && (
             <div className={css.loader}>
-              No payment accounts found...
+              Мы не нашли банковских счетов...
               <br />
               <br />
               <Link to="/dashboard/payment/create?type=Account">
-                Create first one
+                Создать новый
               </Link>
             </div>
           )}
@@ -59,7 +57,7 @@ export const PaymentList = observer(() => {
                       className={css.editLink}
                       to={`/dashboard/payment/edit/${account.id}?type=Account`}
                     >
-                      Edit
+                      Изменить
                     </Link>
                   </div>
                   <div className={css.accountDescription}>
@@ -69,12 +67,12 @@ export const PaymentList = observer(() => {
                     {methods.filter(p => p.account?.id === account.id)
                       .length === 0 && (
                       <div className={css.loader}>
-                        No payment methods found for this account...
+                        Мы не нашли средств платежа для этого счета...
                         <br />
                         <Link
                           to={`/dashboard/payment/create?type=Method&account=${account.id}`}
                         >
-                          Add new one
+                          Добавить
                         </Link>
                       </div>
                     )}

@@ -13,11 +13,11 @@ import { TransactionFormTypeList } from 'modules/transaction/transaction.types';
 import { Picker } from '../../components';
 
 import { state } from '../../models';
-import { TransactionTypeList } from '../../models/transaction.model';
-import { CategoryTypeList } from '../../models/category.model';
+import { TransactionTypeList } from 'models/transaction.model';
+import { CategoryTypeList } from 'models/category.model';
 
 import css from './transaction.module.css';
-import { NetworkComponentStatusList } from '../../api/api.handler';
+import { NetworkComponentStatusList } from 'api/api.handler';
 
 export const TransactionCreate = observer((): JSX.Element => {
   const [payment, setPayment] = useState<number>(0);
@@ -66,7 +66,7 @@ export const TransactionCreate = observer((): JSX.Element => {
       if (payment === 0) {
         setNotification(
           transactionFormType === TransactionFormTypeList.Transaction
-            ? 'Choose payment method for this transaction'
+            ? 'Выберите средство платежа для операции'
             : 'Select from payment method',
         );
 
@@ -77,7 +77,7 @@ export const TransactionCreate = observer((): JSX.Element => {
         type === 0 &&
         transactionFormType === TransactionFormTypeList.Transaction
       ) {
-        setNotification('Select type (Income or Outcome) for this transaction');
+        setNotification('Выберите тип операции (Доходы или Расходы)');
 
         return void 0;
       }
@@ -86,13 +86,13 @@ export const TransactionCreate = observer((): JSX.Element => {
         transactionFormType === TransactionFormTypeList.Transaction &&
         category === 0
       ) {
-        setNotification('Select category for this transaction');
+        setNotification('Выберите категорию операции');
 
         return void 0;
       }
 
       if (cost === 0) {
-        setNotification("Cost can't be less than 1 RUB");
+        setNotification('Сумма не может быть меньше 1 RUB');
 
         return void 0;
       }
@@ -101,7 +101,7 @@ export const TransactionCreate = observer((): JSX.Element => {
         transactionFormType === TransactionFormTypeList.Transfer &&
         transfer === 0
       ) {
-        setNotification('Please specify the transfer payment method');
+        setNotification('Укажите средство платежа получателя');
 
         return void 0;
       }
@@ -130,7 +130,7 @@ export const TransactionCreate = observer((): JSX.Element => {
         history.push('/dashboard/transaction');
       } else {
         setNotification(
-          'Some error occurred while creating new transaction, please try again or comeback later',
+          'Что-то пошло не так, повторите попытку или вернитесь позднее',
         );
       }
 
@@ -159,18 +159,18 @@ export const TransactionCreate = observer((): JSX.Element => {
               search: history.location.search,
             }}
           >
-            Back
+            Назад
           </Link>
           <Picker
             className={css.picker}
             elements={[
               {
                 id: TransactionFormTypeList.Transaction,
-                text: 'Transaction',
+                text: 'Операция',
               },
               {
                 id: TransactionFormTypeList.Transfer,
-                text: 'Transfer',
+                text: 'Перевод',
               },
             ]}
             active={transactionFormType}
@@ -179,8 +179,8 @@ export const TransactionCreate = observer((): JSX.Element => {
         </div>
         <h2>
           {transactionFormType === TransactionFormTypeList.Transaction
-            ? 'New transaction'
-            : 'Transfer'}
+            ? 'Новая операция'
+            : 'Перевод'}
         </h2>
       </div>
       <div className={css.transactionCreate}>
@@ -191,8 +191,8 @@ export const TransactionCreate = observer((): JSX.Element => {
           >
             <option value={0} disabled key={0}>
               {transactionFormType === TransactionFormTypeList.Transaction
-                ? 'Payment method'
-                : 'From payment'}
+                ? 'Средство платежа'
+                : 'Карта отправитель'}
             </option>
             {payments.map(payment => (
               <option key={payment.id} value={payment.id}>
@@ -207,19 +207,19 @@ export const TransactionCreate = observer((): JSX.Element => {
               onChange={onChangeFactory<TransactionTypeList>(setType)}
             >
               <option value="0" disabled key={0}>
-                Transaction type
+                Тип операции
               </option>
               <option
                 key={TransactionTypeList.Income}
                 value={TransactionTypeList.Income}
               >
-                Income
+                Доходы
               </option>
               <option
                 key={TransactionTypeList.Outcome}
                 value={TransactionTypeList.Outcome}
               >
-                Outcome
+                Расходы
               </option>
             </select>
           )}
@@ -229,7 +229,7 @@ export const TransactionCreate = observer((): JSX.Element => {
               onChange={onChangeFactory<number>(setCategory)}
             >
               <option value={0} disabled key={0}>
-                Category
+                Категория
               </option>
               {categories
                 .filter(
@@ -247,11 +247,7 @@ export const TransactionCreate = observer((): JSX.Element => {
           )}
           <input
             type="number"
-            placeholder={
-              transactionFormType === TransactionFormTypeList.Transaction
-                ? 'Cost'
-                : 'Amount'
-            }
+            placeholder="Сумма"
             value={cost}
             onChange={onChangeFactory<number>(setCost)}
           />
@@ -261,7 +257,7 @@ export const TransactionCreate = observer((): JSX.Element => {
               onChange={onChangeFactory<number>(setTransfer)}
             >
               <option value={0} disabled key={0}>
-                To payment
+                Карта получатель
               </option>
               {payments
                 .filter(p => p.id !== payment)
@@ -275,14 +271,14 @@ export const TransactionCreate = observer((): JSX.Element => {
           )}
           <input
             type="text"
-            placeholder="Comment"
+            placeholder="Коментарий"
             value={comment}
             onChange={onChangeFactory<string>(setComment)}
           />
           <button onClick={onSubmit}>
             {transactionFormType === TransactionFormTypeList.Transaction
-              ? 'Add'
-              : 'Transfer'}
+              ? 'Создать'
+              : 'Перевести'}
           </button>
           {notification && <span>{notification}</span>}
         </form>

@@ -3,7 +3,6 @@ import React, {
   Dispatch,
   MouseEvent,
   SetStateAction,
-  useEffect,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
@@ -40,14 +39,14 @@ export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
     const token = query.get('token');
 
     if (password !== passwordCopy) {
-      setNotification('Passwords are not the same');
+      setNotification('Пароли должны совпадать');
       setDisabled(false);
 
       return;
     }
     if (!token) {
       setNotification(
-        'Reset link are invalid, please check your mailbox for correct link',
+        'Ссылка восстановления пароля некорректна. Пожалуйста проверьте свой E-mail ящик',
       );
       setDisabled(false);
 
@@ -57,13 +56,15 @@ export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
     const result = await user.resetPassword(password, token);
 
     if (result.errorCode === APIErrorList.ServiceUnreachableException) {
-      setNotification('Service temporary unreachable, please try again later');
+      setNotification(
+        'Сервис временно недоступен. Пожалуйста повторите еще раз',
+      );
       setDisabled(false);
     }
 
     if (result.success) {
       setNotification(
-        'Your password successfully changed, log in with your new credentials.',
+        'Ваш пароль успешно изменен. Теперь вы можете войти в учетную запись используя новые данные для входа',
       );
 
       setTimeout(() => {
@@ -75,10 +76,10 @@ export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Change password</h2>
+        <h2>Новый пароль</h2>
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Пароль"
           className={css.field}
           value={password}
           autoComplete="off"
@@ -87,7 +88,7 @@ export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
         />
         <input
           type="password"
-          placeholder="Repeat password"
+          placeholder="Повторите пароль"
           className={css.field}
           value={passwordCopy}
           autoComplete="off"
@@ -96,10 +97,10 @@ export const AuthReset = observer(({ user }: PropsType): JSX.Element => {
         />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit} disabled={disabled}>
-          Set new password
+          Изменить пароль
         </button>
         <Link to="/" className={css.link}>
-          Cancel
+          Отменить
         </Link>
       </form>
     </div>

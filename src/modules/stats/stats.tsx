@@ -65,7 +65,7 @@ export const Stats = observer((): JSX.Element => {
         const payment = accounts.find(({ id }) => id === it.key);
 
         keys[it.key] =
-          `${payment?.name}(${payment?.id})` ?? 'Unresolved payment method';
+          `${payment?.name}(${payment?.id})` ?? 'Неизвестный способ платежа';
       }
     });
 
@@ -84,7 +84,10 @@ export const Stats = observer((): JSX.Element => {
           });
         }
 
-        return data;
+        return data.sort(
+          ({ date: aDate }, { date: bDate }) =>
+            new Date(aDate).getTime() - new Date(bDate).getTime(),
+        );
       }, []),
     [remains, remainsKeys],
   );
@@ -201,7 +204,7 @@ export const Stats = observer((): JSX.Element => {
   return (
     <div className={css.root}>
       <div className={css.header}>
-        <h2>Statistic</h2>
+        <h2>Статистика</h2>
       </div>
       <div className={css.content}>
         <div className={css.filters}>
@@ -222,20 +225,16 @@ export const Stats = observer((): JSX.Element => {
               onChange={event => setDateTo(new Date(event.currentTarget.value))}
             />
             <select value={type} onChange={onSelectChangeFactory(setType)}>
-              <option value={TransactionTypeList.All}>By type (none)</option>
-              <option value={TransactionTypeList.Income}>
-                {TransactionTypeList.Income}
-              </option>
-              <option value={TransactionTypeList.Outcome}>
-                {TransactionTypeList.Outcome}
-              </option>
+              <option value={TransactionTypeList.All}>По типу (все)</option>
+              <option value={TransactionTypeList.Income}>Доходы</option>
+              <option value={TransactionTypeList.Outcome}>Расходы</option>
             </select>
             <select
               value={category}
               onChange={onSelectChangeFactory(setCategory)}
               disabled={type === TransactionTypeList.All}
             >
-              <option value={0}>By category (none)</option>
+              <option value={0}>По категории (все)</option>
               {categories
                 .filter(
                   category =>
@@ -250,37 +249,37 @@ export const Stats = observer((): JSX.Element => {
                 ))}
             </select>
             <select value={user} onChange={onSelectChangeFactory(setUser)}>
-              <option value={0}>By user (none)</option>
+              <option value={0}>По пользователю (все)</option>
               {users.map(user => (
                 <option value={user.id} key={user.id}>
                   {user.name}
                 </option>
               ))}
             </select>
-            <button onClick={onSubmit}>Update</button>
+            <button onClick={onSubmit}>Обновить</button>
           </form>
         </div>
         <div className={css.status}>
           {statsStatus === NetworkComponentStatusList.Failed && (
             <span className={css.error}>
-              Network problems occurred. Please try again.
+              Нам не удалось обновить статистику, попробуйте повторить позже.
             </span>
           )}
           {statsStatus === NetworkComponentStatusList.Loaded &&
             income.length === 0 &&
             outcome.length === 0 && (
               <span className={css.info}>
-                There is no statistics data for current parameters. Try to
-                change filters or type other date range.
+                Нет данных для таких параметров. Попробуйте изменить фильтры или
+                выбрать более широкий диапазон дат
               </span>
             )}
         </div>
         <div>
-          <h3>Structure</h3>
+          <h3>Структура</h3>
           <div className={css.graphs}>
             <div>
               <h4>
-                Income:{' '}
+                Доходы:{' '}
                 {new Intl.NumberFormat().format(
                   structureData.Income.reduce((acc, it) => {
                     acc += it.value;
@@ -298,7 +297,7 @@ export const Stats = observer((): JSX.Element => {
             </div>
             <div>
               <h4>
-                Outcome:{' '}
+                Расходы:{' '}
                 {new Intl.NumberFormat().format(
                   structureData.Outcome.reduce((acc, it) => {
                     acc += it.value;
@@ -318,10 +317,10 @@ export const Stats = observer((): JSX.Element => {
         </div>
         <div className={css.graphs}>
           <div>
-            <h3>Income</h3>
+            <h3>Доходы</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
-                tooltipTitle="Income"
+                tooltipTitle="Доходы"
                 dataKeys={['value']}
                 width={
                   window.innerWidth > 414 ? halfChartWidth : fullChartWidth
@@ -332,10 +331,10 @@ export const Stats = observer((): JSX.Element => {
             </div>
           </div>
           <div>
-            <h3>Outcome</h3>
+            <h3>Расходы</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
-                tooltipTitle="Outcome"
+                tooltipTitle="Расходы"
                 dataKeys={['value']}
                 width={
                   window.innerWidth > 414 ? halfChartWidth : fullChartWidth
@@ -348,7 +347,7 @@ export const Stats = observer((): JSX.Element => {
         </div>
         <div className={css.graphs}>
           <div>
-            <h3>Dynamic</h3>
+            <h3>Динамика</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
                 dataKeys={['value']}
@@ -365,14 +364,14 @@ export const Stats = observer((): JSX.Element => {
                     : []
                 }
                 dateFormat={tickDateFormat}
-                tooltipTitle="Difference"
+                tooltipTitle="Разница"
               />
             </div>
           </div>
         </div>
         <div className={css.graphs}>
           <div>
-            <h3>Remains</h3>
+            <h3>Остаток по счету</h3>
             <div className={css.chartWrapper}>
               <StyledLineChart
                 xDataKey="date"

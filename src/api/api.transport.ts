@@ -10,7 +10,6 @@ class Api {
   );
   private get defaultHeaders(): Record<string, string> {
     return {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${this.token}`,
     };
   }
@@ -44,6 +43,16 @@ class Api {
     return query.toString();
   };
 
+  async upload(
+    path: string,
+    body: FormData,
+    headers?: Record<string, string>,
+  ): Promise<Response> {
+    return this.fabric(`${this.endpoint}${path}`, body, headers, {
+      method: 'POST',
+    });
+  }
+
   async get(
     path: string,
     params?: Record<string, string | number | boolean | null>,
@@ -60,13 +69,16 @@ class Api {
 
   async post(
     path: string,
-    body?: Record<string, string | number | boolean | null>,
+    body?: Record<string, string | number | boolean | null> | FormData,
     headers?: Record<string, string>,
   ) {
     return this.fabric(
       `${this.endpoint}${path}`,
       JSON.stringify(body),
-      headers,
+      {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
       { method: 'POST' },
     );
   }

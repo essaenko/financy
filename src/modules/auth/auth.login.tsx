@@ -3,11 +3,10 @@ import React, {
   Dispatch,
   MouseEvent,
   SetStateAction,
-  useEffect,
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { UserState } from 'models/user.model';
 
@@ -33,18 +32,17 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
     setNotification('');
 
     user.loginUser(email, password).then(res => {
-      // eslint-disable-next-line no-debugger
       if (res.errorCode === APIErrorList.UnauthorizedException) {
-        setNotification('User not found, check your credentials and try again');
-      }
-      if (res.errorCode === APIErrorList.ServiceUnreachableException) {
         setNotification(
-          `Service temporary unavailable. Please try again later`,
+          'Нет такого пользователя, проверьте имя пользователя и пароль',
         );
       }
-      if (res.errorCode === APIErrorList.InternalServerException) {
+      if (
+        res.errorCode === APIErrorList.ServiceUnreachableException ||
+        res.errorCode === APIErrorList.InternalServerException
+      ) {
         setNotification(
-          'Service temporary unavailable. Please try again later',
+          `Сервис временно не доступен. Пожалуйста попробуйте позже`,
         );
       }
     });
@@ -53,17 +51,17 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Welcome</h2>
+        <h2>Добро пожаловать</h2>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="E-mail"
           className={css.field}
           value={email}
           onChange={onChangeFactory(setEmail)}
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Пароль"
           className={css.field}
           autoComplete="off"
           value={password}
@@ -71,13 +69,13 @@ export const AuthLogin = observer(({ user }: PropsType): JSX.Element => {
         />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit}>
-          Login
+          Войти
         </button>
         <Link to="/signup" className={css.link}>
-          Signup
+          Регистрация
         </Link>
         <Link to="/restore" className={css.link}>
-          Forgot password
+          Забыли пароль?
         </Link>
       </form>
     </div>

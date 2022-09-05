@@ -64,7 +64,7 @@ export const TransactionList = observer((): JSX.Element => {
   }, [categoriesStatus]);
 
   useEffect(() => {
-    let dateFrom: number;
+    let dateFrom: number | undefined;
     switch (dateInterval) {
       case DateIntervalList.Day:
         dateFrom = addDays(today, -1).getTime();
@@ -76,7 +76,7 @@ export const TransactionList = observer((): JSX.Element => {
         dateFrom = addYears(today, -1).getTime();
         break;
       default:
-        dateFrom = new Date(account.createdAt || '').getTime();
+        dateFrom = undefined;
     }
     state.transaction.fetchTransactions(
       new TransactionFilters(
@@ -127,21 +127,21 @@ export const TransactionList = observer((): JSX.Element => {
   return (
     <div>
       <div className={css.header}>
-        <h2>Transactions</h2>
+        <h2>Операции</h2>
         <Picker
           className={css.picker}
           elements={[
             {
               id: TransactionTypeList.All,
-              text: TransactionTypeList.All.toString(),
+              text: 'Все',
             },
             {
               id: TransactionTypeList.Income,
-              text: TransactionTypeList.Income.toString(),
+              text: 'Доходы',
             },
             {
               id: TransactionTypeList.Outcome,
-              text: TransactionTypeList.Outcome.toString(),
+              text: 'Расходы',
             },
           ]}
           active={type}
@@ -172,19 +172,19 @@ export const TransactionList = observer((): JSX.Element => {
                 elements={[
                   {
                     id: DateIntervalList.Ever,
-                    text: DateIntervalList.Ever.toString(),
+                    text: 'Всегда',
                   },
                   {
                     id: DateIntervalList.Day,
-                    text: DateIntervalList.Day.toString(),
+                    text: 'День',
                   },
                   {
                     id: DateIntervalList.Month,
-                    text: DateIntervalList.Month.toString(),
+                    text: 'Месяц',
                   },
                   {
                     id: DateIntervalList.Year,
-                    text: DateIntervalList.Year.toString(),
+                    text: 'Год',
                   },
                 ]}
                 active={dateInterval}
@@ -196,7 +196,7 @@ export const TransactionList = observer((): JSX.Element => {
                   onChange={event => setCategory(+event.currentTarget.value)}
                 >
                   <option value={0} disabled key={0}>
-                    Filter by category
+                    Фильтр по категории
                   </option>
                   {categories
                     .filter(
@@ -213,16 +213,16 @@ export const TransactionList = observer((): JSX.Element => {
                 </select>
                 <input
                   type="date"
-                  placeholder="From date"
+                  placeholder="По дате"
                   onChange={event =>
                     setDateFilter(new Date(event.currentTarget.value).getTime())
                   }
                   value={dateFilterValue}
                 />
                 <button className="flat" onClick={clearFilters}>
-                  Clear
+                  Очистить
                 </button>
-                <span onClick={() => setFilterState(false)}>Close</span>
+                <span onClick={() => setFilterState(false)}>Закрыть</span>
               </form>
             </div>
           </div>
@@ -231,21 +231,39 @@ export const TransactionList = observer((): JSX.Element => {
       <div className={css.content}>
         {page > 1 &&
           collection.length < page * TRANSACTIONS_PER_PAGE &&
-          collection.length < total && <span>Show previous transactions</span>}
+          collection.length < total && (
+            <span className={css.moreButton} onClick={() => setPage(page - 1)}>
+              Показать предыдущие операции
+            </span>
+          )}
         {status === NetworkComponentStatusList.Loaded &&
           collection.length === 0 && (
-            <div className={css.info}>No transactions was found...</div>
+            <div className={css.info}>Мы не нашли операций...</div>
           )}
         {status === NetworkComponentStatusList.Loading &&
           !collection.length && (
-            <div className={css.info}>Loading transactions...</div>
+            <div className={css.info}>Загружаем список...</div>
           )}
-        {collection.map(transaction => (
-          <TransactionItem key={transaction.id} transaction={transaction} />
-        ))}
+        <table>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Сумма</th>
+              <th>Средство платежа</th>
+              <th>Категория</th>
+              <th>Комментарий</th>
+              <th>Пользователь</th>
+            </tr>
+          </thead>
+          <tbody>
+            {collection.map(transaction => (
+              <TransactionItem key={transaction.id} transaction={transaction} />
+            ))}
+          </tbody>
+        </table>
         {page < Math.ceil(total / TRANSACTIONS_PER_PAGE) && (
           <span className={css.moreButton} onClick={() => setPage(page + 1)}>
-            Show more
+            Показать больше
           </span>
         )}
       </div>

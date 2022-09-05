@@ -38,14 +38,14 @@ export const PaymentCreate = (): JSX.Element => {
       setNotification('');
 
       if (!name) {
-        setNotification("Name can't be empty");
+        setNotification('Название не может быть пустым');
 
         return void 0;
       }
 
       if (formType === PaymentFormTypeList.Method && !account) {
         setNotification(
-          'Something went wrong, please reload this page and try again',
+          'Что-то пошло не так, пожалуйста повторите попытку или вернитесь познее',
         );
 
         return void 0;
@@ -71,22 +71,24 @@ export const PaymentCreate = (): JSX.Element => {
         history.push('/dashboard/payment');
       } else {
         setNotification(
-          'Some error occurred while creating new payment method, try again or comeback later',
+          'Что-то пошло не так, пожалуйста повторите попытку или вернитесь познее',
         );
       }
 
       return void 0;
     },
-    [name, formType, account, description, remains, query, history],
+    [name, formType, account, description, remains, history],
   );
 
   return (
     <>
       <div>
-        <Link to="/dashboard/payment">Back</Link>
+        <Link to="/dashboard/payment">Назад</Link>
         <h2>
-          New payment{' '}
-          {formType === PaymentFormTypeList.Account ? 'account' : 'method'}
+          Новый{' '}
+          {formType === PaymentFormTypeList.Account
+            ? 'счет'
+            : 'платежный метод'}
         </h2>
       </div>
       <div className={css.createForm}>
@@ -94,24 +96,24 @@ export const PaymentCreate = (): JSX.Element => {
           <input
             type="text"
             value={name}
-            placeholder="Name"
+            placeholder="Название"
             onChange={onChangeFactory<string>(setName)}
           />
           <input
             type="text"
             value={description}
-            placeholder="Description"
+            placeholder="Описание"
             onChange={onChangeFactory<string>(setDescription)}
           />
           {formType === PaymentFormTypeList.Account && (
             <input
               type="number"
               value={remains}
-              placeholder="Remains"
+              placeholder="Остаток"
               onChange={onChangeFactory<number>(setRemains)}
             />
           )}
-          <button onClick={onSubmit}>Create</button>
+          <button onClick={onSubmit}>Создать</button>
           {notification && <span>{notification}</span>}
         </form>
       </div>

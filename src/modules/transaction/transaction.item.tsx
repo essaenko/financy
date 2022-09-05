@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import classnames from 'classnames';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
 import {
@@ -16,44 +16,72 @@ type PropsType = {
 
 export const TransactionItem = observer(({ transaction }: PropsType) => {
   const history = useHistory();
+  const tDate = useMemo(
+    () => new Date(transaction?.date || ''),
+    [transaction?.date],
+  );
+  const onNavigate = useCallback(() => {
+    history.push({
+      pathname: `/dashboard/transaction/edit/${transaction.id}`,
+      search: history.location.search,
+    });
+  }, [history, transaction.id]);
+
   return (
-    <Link
-      to={{
-        pathname: `/dashboard/transaction/edit/${transaction.id}`,
-        search: history.location.search,
-      }}
+    <tr
       key={transaction.id}
       className={classnames(css.transaction, {
         [css.income]: transaction.type === TransactionTypeList.Income,
         [css.outcome]: transaction.type === TransactionTypeList.Outcome,
         [css.transfer]: transaction.to !== null,
       })}
+      onClick={onNavigate}
     >
-      <div className={css.payment}>
-        {transaction.from?.name} ({transaction.from?.account?.name}){' '}
-        {transaction.from?.owner?.name}{' '}
-        {transaction.to
-          ? `→ ${transaction.to.name} (${transaction.to.account?.name}) ${transaction.to.owner?.name}`
-          : ''}
-        <span>{new Date(transaction?.date || '').toDateString()}</span>
-      </div>
-      <div className={css.cost}>
-        {transaction.to !== null && '='}
-        {transaction.to === null &&
-        transaction.type === TransactionTypeList.Income
-          ? '+'
-          : '-'}
-        {new Intl.NumberFormat().format(transaction.cost || 0)} RUB
-      </div>
-      <div className={css.category}>
-        {transaction.category?.name}{' '}
-        {transaction.category?.parent &&
-          `(${transaction.category?.parent.name})`}
-      </div>
-      <div className={css.comment}>
-        {transaction.comment || 'No comment'}
+      <td>
+        <span>
+          {new Date(tDate || '').toLocaleDateString(navigator.language, {
+            day: '2-digit',
+            month: '2-digit',
+            year:
+              tDate.getFullYear() < new Date().getFullYear()
+                ? 'numeric'
+                : undefined,
+          })}
+        </span>
+      </td>
+      <td>
+        <div className={css.cost}>
+          {transaction.to !== null && '='}
+          {transaction.to === null &&
+          transaction.type === TransactionTypeList.Income
+            ? '+'
+            : '-'}
+          {new Intl.NumberFormat().format(transaction.cost || 0)} RUB
+        </div>
+      </td>
+      <td>
+        <div className={css.payment}>
+          {transaction.from?.name} ({transaction.from?.account?.name}){' '}
+          {transaction.to
+            ? `→ ${transaction.to.name} (${transaction.to.account?.name}) ${transaction.to.owner?.name}`
+            : ''}
+        </div>
+      </td>
+      <td>
+        <div>
+          {transaction.category?.name}{' '}
+          {transaction.category?.parent &&
+            `(${transaction.category?.parent.name})`}
+        </div>
+      </td>
+      <td>
+        <div className={css.comment}>
+          {transaction.comment || 'Нет коментария'}
+        </div>
+      </td>
+      <td>
         <span>{transaction.user?.name}</span>
-      </div>
-    </Link>
+      </td>
+    </tr>
   );
 });

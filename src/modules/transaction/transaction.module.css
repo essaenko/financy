@@ -86,8 +86,8 @@
 
       .dateIntervalPicker {
         margin: 0 auto 10px;
-        width: 210px;
-        max-width: 210px;
+        width: 230px;
+        max-width: 230px;
 
         @media screen and (max-width: 414px) {
           width: 100%;
@@ -165,44 +165,33 @@
   }
 
   .transaction {
-    background-color: var(--system-opacied-gray);
-    color: var(--system-white);
     padding: 10px;
-    border-radius: 5px;
-    min-width: 300px;
-    max-width: 600px;
+    align-items: center;
+    color: var(--system-black);
+    border-bottom: 1px solid var(--system-gray);
+    height: 40px;
 
     &:hover {
+      cursor: pointer;
       text-decoration: none !important;
-    }
-
-    & + .transaction {
-      margin-top: 10px;
     }
 
     .payment {
       display: flex;
-      font-size: 19px;
 
       span {
         margin-left: auto;
         font-size: 14px;
         padding-left: 20px;
-        min-width: 115px;
+        min-width: 120px;
       }
     }
 
     .cost {
-      margin-top: 10px;
-      font-size: 19px;
-    }
-
-    .category {
-      margin-top: 10px;
+      font-size: 16px;
     }
 
     .comment {
-      margin-top: 10px;
       font-size: 14px;
       display: flex;
       align-items: flex-start;
@@ -242,21 +231,37 @@
     padding-bottom: 20px;
     position: relative;
 
+    table {
+      width: 100%;
+      text-align: left;
+      margin:0;
+      padding:0;
+      background:none;
+      border:none;
+      border-collapse:collapse;
+      border-spacing:0;
+
+      th {
+        font-weight: 400;
+        font-size: 18px;
+      }
+      
+      thead {
+        position: sticky;
+        top: -20px;
+        background-color: var(--system-opacied-white);
+        padding: 10px 0;
+        height: 40px;
+        backdrop-filter: blur(0.4rem);
+      }
+    }
+
     @media screen and (max-width: 414px) {
       padding-bottom: 75px;
     }
 
     .info {
       color: var(--system-light-text);
-    }
-
-    a {
-      margin-top: 10px;
-      display: block;
-
-      &:hover {
-        text-decoration: underline;
-      }
     }
 
     .moreButton {
@@ -267,6 +272,7 @@
       text-align: center;
       height: 30px;
       margin-top: 10px;
+      cursor: pointer;
     }
   }
 }
