@@ -56,7 +56,7 @@ export const TransactionItem = observer(({ transaction }: PropsType) => {
           transaction.type === TransactionTypeList.Income
             ? '+'
             : '-'}
-          {new Intl.NumberFormat().format(transaction.cost || 0)} RUB
+          {new Intl.NumberFormat().format(transaction.cost || 0)} ₽
         </div>
       </td>
       <td>
@@ -118,7 +118,7 @@ export const TransactionItem = observer(({ transaction }: PropsType) => {
           transaction.type === TransactionTypeList.Income
             ? '+'
             : '-'}
-          {new Intl.NumberFormat().format(transaction.cost || 0)} RUB
+          {new Intl.NumberFormat().format(transaction.cost || 0)} ₽
         </div>
         <div>
           {transaction.category?.name}{' '}

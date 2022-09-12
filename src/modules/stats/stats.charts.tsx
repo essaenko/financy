@@ -112,7 +112,7 @@ export const StyledPieChart = React.memo(
         ))}
         <Tooltip
           formatter={(value: number, name: string) => [
-            `${new Intl.NumberFormat().format(value || 0)} RUB`,
+            `${new Intl.NumberFormat().format(value || 0)} ₽`,
             name,
           ]}
         />
@@ -192,7 +192,7 @@ export const StyledLineChart = React.memo(
       />
       <Tooltip
         formatter={(value: number, name: string) => [
-          `${new Intl.NumberFormat().format(value || 0)} RUB`,
+          `${new Intl.NumberFormat().format(value || 0)} ₽`,
           tooltipTitle ?? name,
         ]}
         labelFormatter={value => {

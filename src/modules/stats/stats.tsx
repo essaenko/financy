@@ -287,7 +287,7 @@ export const Stats = observer((): JSX.Element => {
                     return acc;
                   }, 0),
                 )}{' '}
-                rub
+                ₽
               </h4>
               <StyledPieChart
                 width={halfChartWidth}
@@ -305,7 +305,7 @@ export const Stats = observer((): JSX.Element => {
                     return acc;
                   }, 0),
                 )}{' '}
-                rub
+                ₽
               </h4>
               <StyledPieChart
                 width={halfChartWidth}

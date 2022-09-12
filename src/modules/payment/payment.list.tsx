@@ -49,7 +49,7 @@ export const PaymentList = observer(() => {
                   <div className={css.accountHeader}>
                     <div className={css.accountName}>{account.name}: </div>
                     <div className={css.accountRemains}>
-                      {new Intl.NumberFormat().format(account.remains ?? 0)} RUB
+                      {new Intl.NumberFormat().format(account.remains ?? 0)} ₽
                     </div>
                     <Link
                       className={css.addLink}

@@ -123,6 +123,25 @@
           max-width: 100%;
           width: 100%;
           box-sizing: border-box;
+          flex-direction: column;
+          align-items: start;
+
+          padding: 10px;
+          border: 0;
+          background-color: var(--system-gray);
+          margin-top: 10px;
+          color: var(--system-white);
+          border-radius: 5px;
+
+          .paymentDescription {
+            margin-left: 0 !important;
+            margin-top: 5px;
+          }
+
+          .paymentOwner {
+            margin-left: 0 !important;
+            margin-top: 5px;
+          }
         }
 
         .paymentName {

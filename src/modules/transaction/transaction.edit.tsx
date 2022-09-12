@@ -118,7 +118,7 @@ export const TransactionEdit = observer((): JSX.Element => {
       }
 
       if (cost === 0) {
-        setNotification('Сумма не может быть меньше 1 RUB');
+        setNotification('Сумма не может быть меньше 1 ₽');
 
         return void 0;
       }
