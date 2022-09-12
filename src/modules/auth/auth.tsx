@@ -39,7 +39,7 @@ export const Auth = observer(() => {
   return (
     <div className={css.root}>
       <Route path="/" exact>
-        <AuthLogin user={state.user} />
+        <AuthLogin user={state.user} account={state.account} />
       </Route>
       <Route path="/signup" exact>
         <AuthRegistration user={state.user} />

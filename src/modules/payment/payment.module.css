@@ -48,8 +48,9 @@
   }
 
   .content {
-    margin-top: 20px;
-
+    span {
+      color: var(--system-gray);
+    }
     .loader {
       color: var(--system-light-text);
     }
