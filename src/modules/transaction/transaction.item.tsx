@@ -27,7 +27,7 @@ export const TransactionItem = observer(({ transaction }: PropsType) => {
     });
   }, [history, transaction.id]);
 
-  return (
+  return window.innerWidth > 425 ? (
     <tr
       key={transaction.id}
       className={classnames(css.transaction, {
@@ -83,5 +83,53 @@ export const TransactionItem = observer(({ transaction }: PropsType) => {
         <span>{transaction.user?.name}</span>
       </td>
     </tr>
+  ) : (
+    <div
+      key={transaction.id}
+      className={classnames(css.transaction, {
+        [css.income]: transaction.type === TransactionTypeList.Income,
+        [css.outcome]: transaction.type === TransactionTypeList.Outcome,
+        [css.transfer]: transaction.to !== null,
+      })}
+      onClick={onNavigate}
+    >
+      <div>
+        <div className={css.payment}>
+          {transaction.from?.name} ({transaction.from?.account?.name}){' '}
+          {transaction.to
+            ? `→ ${transaction.to.name} (${transaction.to.account?.name}) ${transaction.to.owner?.name}`
+            : ''}
+          <span>
+            {new Date(tDate || '').toLocaleDateString(navigator.language, {
+              day: '2-digit',
+              month: '2-digit',
+              year:
+                tDate.getFullYear() < new Date().getFullYear()
+                  ? 'numeric'
+                  : undefined,
+            })}
+          </span>
+        </div>
+      </div>
+      <div>
+        <div className={css.cost}>
+          {transaction.to !== null && '='}
+          {transaction.to === null &&
+          transaction.type === TransactionTypeList.Income
+            ? '+'
+            : '-'}
+          {new Intl.NumberFormat().format(transaction.cost || 0)} RUB
+        </div>
+        <div>
+          {transaction.category?.name}{' '}
+          {transaction.category?.parent &&
+            `(${transaction.category?.parent.name})`}
+        </div>
+        <div className={css.comment}>
+          {transaction.comment || 'Нет коментария'}
+          <span>{transaction.user?.name}</span>
+        </div>
+      </div>
+    </div>
   );
 });

@@ -171,6 +171,17 @@
     border-bottom: 1px solid var(--system-gray);
     height: 40px;
 
+    @media screen and (max-width: 425px) {
+      background-color: var(--system-gray);
+      border-radius: 5px;
+      color: var(--system-white);
+      height: auto;
+
+      & {
+        margin-top: 10px;
+      }
+    }
+
     &:hover {
       cursor: pointer;
       text-decoration: none !important;
@@ -183,7 +194,6 @@
         margin-left: auto;
         font-size: 14px;
         padding-left: 20px;
-        min-width: 120px;
       }
     }
 

@@ -244,23 +244,32 @@ export const TransactionList = observer((): JSX.Element => {
           !collection.length && (
             <div className={css.info}>Загружаем список...</div>
           )}
-        <table>
-          <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Сумма</th>
-              <th>Средство платежа</th>
-              <th>Категория</th>
-              <th>Комментарий</th>
-              <th>Пользователь</th>
-            </tr>
-          </thead>
-          <tbody>
-            {collection.map(transaction => (
-              <TransactionItem key={transaction.id} transaction={transaction} />
-            ))}
-          </tbody>
-        </table>
+        {window.innerWidth > 425 && (
+          <table>
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+                <th>Средство платежа</th>
+                <th>Категория</th>
+                <th>Комментарий</th>
+                <th>Пользователь</th>
+              </tr>
+            </thead>
+            <tbody>
+              {collection.map(transaction => (
+                <TransactionItem
+                  key={transaction.id}
+                  transaction={transaction}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
+        {window.innerWidth <= 425 &&
+          collection.map(transaction => (
+            <TransactionItem key={transaction.id} transaction={transaction} />
+          ))}
         {page < Math.ceil(total / TRANSACTIONS_PER_PAGE) && (
           <span className={css.moreButton} onClick={() => setPage(page + 1)}>
             Показать больше
