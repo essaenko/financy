@@ -159,7 +159,7 @@ export const Account = observer((): JSX.Element => {
         {}
         {users.map(user => (
           <div key={user.id}>
-            {user.name} {user.id === state.user.id && ' (You)'}{' '}
+            {user.name} {user.id === state.user.id && ' (Вы)'}{' '}
             {user.id !== state.user.id && account.owner?.id === state.user.id && (
               <Link
                 className={css.remove}

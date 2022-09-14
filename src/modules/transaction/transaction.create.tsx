@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, NavLink } from 'react-router-dom';
 
 import { TransactionFormTypeList } from 'modules/transaction/transaction.types';
 import { Picker } from '../../components';
@@ -185,22 +185,27 @@ export const TransactionCreate = observer((): JSX.Element => {
       </div>
       <div className={css.transactionCreate}>
         <form>
-          <select
-            value={payment}
-            onChange={onChangeFactory<number>(setPayment)}
-          >
-            <option value={0} disabled key={0}>
-              {transactionFormType === TransactionFormTypeList.Transaction
-                ? 'Средство платежа'
-                : 'Карта отправитель'}
-            </option>
-            {payments.map(payment => (
-              <option key={payment.id} value={payment.id}>
-                {payment.name} ({payment.account?.name}) ---{' '}
-                {payment.owner?.name}
+          <div>
+            <select
+              value={payment}
+              onChange={onChangeFactory<number>(setPayment)}
+            >
+              <option value={0} disabled key={0}>
+                {transactionFormType === TransactionFormTypeList.Transaction
+                  ? 'Средство платежа'
+                  : 'Карта отправитель'}
               </option>
-            ))}
-          </select>
+              {payments.map(payment => (
+                <option key={payment.id} value={payment.id}>
+                  {payment.name} ({payment.account?.name}) ---{' '}
+                  {payment.owner?.name}
+                </option>
+              ))}
+            </select>
+            <NavLink to="/dashboard/payment/create?type=Account">
+              Создать
+            </NavLink>
+          </div>
           {transactionFormType === TransactionFormTypeList.Transaction && (
             <select
               value={type}

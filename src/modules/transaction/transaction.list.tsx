@@ -226,6 +226,7 @@ export const TransactionList = observer((): JSX.Element => {
               </form>
             </div>
           </div>
+          {(page - 1) * 30 + 1} - {page * 30} из {total}
         </div>
       </div>
       <div className={css.content}>
