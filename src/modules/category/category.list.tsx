@@ -35,15 +35,16 @@ export const CategoryList = observer((): JSX.Element => {
   };
 
   const deepRender = (node: TreeNode<{ name?: string }>): JSX.Element => (
-    <div
+    <Link
       key={node.id}
       className={classnames(css.deepNode, {
         [css.parentNode]: !!node.children,
       })}
+      to={`/dashboard/category/edit/${node.id}`}
     >
       {node.name}
       {node.children && <>{Object.values(node.children).map(deepRender)}</>}
-    </div>
+    </Link>
   );
   const refreshList = useCallback(() => {
     state.categories.fetchCategories();

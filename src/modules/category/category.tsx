@@ -9,6 +9,7 @@ import { state } from '../../models';
 
 import css from './category.module.css';
 import { NetworkComponentStatusList } from 'api/api.handler';
+import { CategoryEdit } from 'modules/category/category.edit';
 
 export const Category = observer((): JSX.Element => {
   const { status } = state.categories;
@@ -25,6 +26,9 @@ export const Category = observer((): JSX.Element => {
       </Route>
       <Route path="/dashboard/category/create" exact>
         <CategoryCreate />
+      </Route>
+      <Route path="/dashboard/category/edit/:id" exact>
+        <CategoryEdit />
       </Route>
     </div>
   );

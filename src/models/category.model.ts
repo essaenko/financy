@@ -1,8 +1,12 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { AccountModel } from './account.model';
-import { createCategory, fetchCategories } from '../api/api.category';
-import { APIErrorList, NetworkComponentStatusList } from '../api/api.handler';
+import {
+  createCategory,
+  fetchCategories,
+  updateCategory,
+} from 'api/api.category';
+import { APIErrorList, NetworkComponentStatusList } from 'api/api.handler';
 
 export enum CategoryTypeList {
   Income = 'Income',
@@ -15,6 +19,7 @@ export interface CategoryModel {
   parent: CategoryModel | undefined;
   account: AccountModel | undefined;
   name: string | undefined;
+  mcc: string | undefined;
   type: CategoryTypeList | undefined;
   createdAt: string | undefined;
   updatedAt: string | undefined;
@@ -25,6 +30,7 @@ export class CategoryState implements CategoryModel {
   parent: CategoryModel | undefined;
   account: AccountModel | undefined;
   name: string | undefined;
+  mcc: string | undefined;
   type: CategoryTypeList | undefined;
   createdAt: string | undefined;
   updatedAt: string | undefined;
@@ -38,6 +44,7 @@ export class CategoryState implements CategoryModel {
     this.parent = category.parent;
     this.account = category.account;
     this.name = category.name;
+    this.mcc = category.mcc;
     this.type = category.type;
     this.createdAt = category.createdAt;
     this.updatedAt = category.updatedAt;
@@ -51,6 +58,22 @@ export class CategoryCollectionState {
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  async updateCategory(
+    id: number,
+    name: string,
+    type: CategoryTypeList,
+    mcc: string,
+    parent?: number,
+  ) {
+    const result = await updateCategory(id, name, type, mcc, parent);
+
+    if (result.success && result.payload) {
+      await this.fetchCategories();
+    }
+
+    return result;
   }
 
   async createCategory(name: string, type: CategoryTypeList, parent?: number) {

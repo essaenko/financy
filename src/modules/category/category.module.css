@@ -70,6 +70,10 @@
   }
 
   .categoriesOwner {
+    a {
+      display: block;
+    }
+
     & > .deepNode {
       margin-bottom: 5px;
 
