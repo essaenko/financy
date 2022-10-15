@@ -89,7 +89,10 @@ class Api {
 
   removeToken() {
     localStorage.removeItem(AUTH_TOKEN_LOCAL_STORAGE_KEY);
-    this.token = null;
+    if (this.token !== null) {
+      this.token = null;
+      window.location.reload();
+    }
   }
 }
 

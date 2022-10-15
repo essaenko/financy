@@ -154,7 +154,7 @@ export const Stats = observer((): JSX.Element => {
   const halfChartWidth = useMemo(() => {
     return window.innerWidth > 414
       ? (window.innerWidth - 320) / 2
-      : (window.innerWidth - 30) / 2;
+      : window.innerWidth - 30;
   }, []);
   const fullChartWidth = useMemo(() => {
     return window.innerWidth > 414 ? window.innerWidth - 320 : 800;

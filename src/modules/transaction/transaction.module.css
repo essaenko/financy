@@ -28,11 +28,11 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 50%;
+          width: 33.3%;
         }
 
         .filters {
-          width: 50%;
+          width: 33.3%;
           align-items: center;
 
           .hiddenContent {

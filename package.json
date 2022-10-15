@@ -120,6 +120,7 @@
     ],
     "testEnvironment": "jsdom",
     "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest",
       "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/babelTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
@@ -133,7 +134,13 @@
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+      "^api(.*)$": "<rootDir>/src/api$1",
+      "^modules(.*)$": "<rootDir>/src/modules$1",
+      "^models(.*)$": "<rootDir>/src/models$1",
+      "^static(.*)$": "<rootDir>/src/static$1",
+      "^components(.*)$": "<rootDir>/src/components$1",
+      "^utils(.*)$": "<rootDir>/src/utils$1"
     },
     "moduleFileExtensions": [
       "web.js",
@@ -170,6 +177,7 @@
     "postcss-loader": "^6.2.1",
     "postcss-media-variables": "^2.0.1",
     "postcss-nested": "^5.0.6",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "ts-jest": "^29.0.3"
   }
 }
