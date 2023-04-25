@@ -42,13 +42,13 @@ export const Sidebar = (): JSX.Element => {
       >
         <span>Аккаунт</span>
       </NavLink>
-      <NavLink
-        to="/dashboard/transaction/import"
-        className={css.link}
-        activeClassName={css.activeLink}
-      >
-        <span>Импорт</span>
-      </NavLink>
+      {/* <NavLink */}
+      {/*  to="/dashboard/transaction/import" */}
+      {/*  className={css.link} */}
+      {/*  activeClassName={css.activeLink} */}
+      {/* > */}
+      {/*  <span>Импорт</span> */}
+      {/* </NavLink> */}
       <a className={css.footerLink} href="mailto:support@financy.live">
         Поддержка
       </a>

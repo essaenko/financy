@@ -1,7 +1,7 @@
 import { StatsCollectionModel } from 'models/stats.model';
 import { APIParsedResponse, requestHandler } from './api.handler';
 import { api } from './api.transport';
-import { TransactionTypeList } from '../models/transaction.model';
+import { TransactionTypeList } from 'models/transaction.model';
 
 export const fetchStatsData = async (
   dateFrom: Date,

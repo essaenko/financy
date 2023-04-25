@@ -8,7 +8,7 @@ import {
   resetPassword,
   updatePassword,
 } from 'api/api.user';
-import { APIParsedResponse } from '../api/api.handler';
+import { APIParsedResponse } from 'api/api.handler';
 
 export interface UserModel {
   id: string | undefined;

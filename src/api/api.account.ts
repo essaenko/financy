@@ -1,7 +1,7 @@
 import { APIParsedResponse, requestHandler } from './api.handler';
 import { api } from './api.transport';
-import { AccountModel } from '../models/account.model';
-import { UserModel } from '../models/user.model';
+import { AccountModel } from 'models/account.model';
+import { UserModel } from 'models/user.model';
 
 export const fetchAccount = async (): Promise<
   APIParsedResponse<AccountModel>

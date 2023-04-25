@@ -87,6 +87,7 @@ export const updateTransaction = async (
   type: TransactionTypeList,
   category: number,
   cost: number,
+  date: string,
   comment?: string,
   to?: number,
 ): Promise<APIParsedResponse<TransactionModel>> => {
@@ -96,6 +97,7 @@ export const updateTransaction = async (
     type: TransactionTypeList;
     category: number;
     cost: number;
+    date: number;
     comment?: string;
     to?: number;
   } = {
@@ -104,6 +106,7 @@ export const updateTransaction = async (
     category,
     type,
     cost,
+    date: new Date(date).getTime(),
   };
 
   if (comment) {

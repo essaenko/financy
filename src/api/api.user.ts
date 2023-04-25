@@ -1,7 +1,7 @@
 import { APIParsedResponse, requestHandler } from './api.handler';
 import { api } from './api.transport';
 import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '../globals.config';
-import { UserModel } from '../models/user.model';
+import { UserModel } from 'models/user.model';
 
 export const restorePassword = async (
   email: string,

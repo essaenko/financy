@@ -1,13 +1,23 @@
-import { AUTH_TOKEN_LOCAL_STORAGE_KEY } from '../globals.config';
+import {
+  AUTH_TOKEN_LOCAL_STORAGE_KEY,
+  USE_PRODUCTION_BACKEND,
+} from '../globals.config';
 
 class Api {
-  private endpoint: string =
-    process.env.NODE_ENV === 'production'
-      ? `/api/v1`
-      : `${window.location.protocol}//${window.location.hostname}:8080/api/v1`;
-  private token: string | null = localStorage.getItem(
-    AUTH_TOKEN_LOCAL_STORAGE_KEY,
-  );
+  private readonly endpoint: string;
+  private token: string | null;
+
+  constructor() {
+    this.token = localStorage.getItem(AUTH_TOKEN_LOCAL_STORAGE_KEY);
+    if (process.env.NODE_ENV === 'production') {
+      this.endpoint = `/api/v1`;
+    } else if (USE_PRODUCTION_BACKEND) {
+      this.endpoint = 'https://financy.live/api/v1';
+    } else {
+      this.endpoint = `${window.location.protocol}//${window.location.hostname}:8080/api/v1`;
+    }
+  }
+
   private get defaultHeaders(): Record<string, string> {
     return {
       Authorization: `Bearer ${this.token}`,

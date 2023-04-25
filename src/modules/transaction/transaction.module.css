@@ -18,7 +18,7 @@
       align-items: start;
       position: sticky;
       top: -25px;
-      background-color: var(--system-white);
+      background-color: var(--MainTheme);
       z-index: 1;
 
       .buttons {
@@ -79,7 +79,7 @@
       }
 
       i {
-        color: var(--system-black);
+        color: var(--TextBase);
         cursor: pointer;
         border-radius: 4px;
       }
@@ -167,15 +167,20 @@
   .transaction {
     padding: 10px;
     align-items: center;
-    color: var(--system-black);
+    color: var(--TextBase);
     border-bottom: 1px solid var(--system-gray);
     height: 40px;
 
     @media screen and (max-width: 425px) {
-      background-color: var(--system-gray);
+      background-color: var(--Transaction);
       border-radius: 5px;
-      color: var(--system-white);
+      color: var(--TextBase);
       height: auto;
+      border-bottom: none;
+
+      @media (prefers-color-scheme: dark) {
+        color: var(--TextContrast);
+      }
 
       & {
         margin-top: 10px;
@@ -185,6 +190,7 @@
     &:hover {
       cursor: pointer;
       text-decoration: none !important;
+      background-color: var(--system-light-gray);
     }
 
     .payment {
@@ -209,6 +215,8 @@
       span {
         display: block;
         margin-left: auto;
+        white-space: nowrap;
+
       }
     }
 
@@ -220,7 +228,7 @@
 
     &.income {
       .cost {
-        color: var(--system-green);
+        color: var(--TextSuccess);
       }
     }
 
@@ -232,7 +240,7 @@
   }
 
   .icon {
-    color: var(--system-black);
+    color: var(--TextBase);
     cursor: pointer;
     margin-right: 10px;
   }
@@ -271,7 +279,7 @@
     }
 
     .info {
-      color: var(--system-light-text);
+      color: var(--TextNotification);
     }
 
     .moreButton {

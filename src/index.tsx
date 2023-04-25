@@ -5,6 +5,7 @@ import './global.vars.css';
 
 import { App } from 'modules/app';
 import reportWebVitals from './reportWebVitals';
+import { initServiceWorker } from './serviceworker/init';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,3 +18,5 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+initServiceWorker();

@@ -16,7 +16,7 @@ export const PaymentList = observer(() => {
   return (
     <>
       <div className={css.header}>
-        <h2>Банковские счета</h2>
+        <h2>Счета</h2>
         <Link to="/dashboard/payment/create?type=Account">
           <PlusIcon className={css.icon} />
         </Link>
@@ -37,10 +37,10 @@ export const PaymentList = observer(() => {
               </Link>
             </div>
           )}
-        <span>
-          Для корректной работы импорта транзакций укажите в названии карты
-          последние 4 цифры карты с звездочкой (*1234)
-        </span>
+        {/* <span> */}
+        {/*  Для корректной работы импорта транзакций укажите в названии карты */}
+        {/*  последние 4 цифры карты с звездочкой (*1234) */}
+        {/* </span> */}
         {accounts.length > 0 && (
           <div className={css.paymentAccountCollection}>
             {accounts.map(account => {

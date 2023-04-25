@@ -16,6 +16,7 @@ import { NetworkComponentStatusList } from 'api/api.handler';
 import { state } from '../../models';
 
 import css from './transaction.module.css';
+import { dateTimeToString } from 'utils/date.utils';
 
 export const TransactionEdit = observer((): JSX.Element => {
   const match = useRouteMatch<{ id: string }>();
@@ -31,6 +32,9 @@ export const TransactionEdit = observer((): JSX.Element => {
   );
   const [category, setCategory] = useState<number>(0);
   const [cost, setCost] = useState<number>(0);
+  const [date, setDate] = useState<string>(
+    transaction?.createdAt ?? dateTimeToString(new Date()),
+  );
   const [comment, setComment] = useState<string>('');
   const [transfer, setTransfer] = useState<number>(0);
   const [notification, setNotification] = useState<string>('');
@@ -139,6 +143,7 @@ export const TransactionEdit = observer((): JSX.Element => {
             ? category
             : (transferCategory?.id as number),
           cost,
+          date,
           comment,
           transactionFormType === TransactionFormTypeList.Transfer
             ? transfer
@@ -165,6 +170,7 @@ export const TransactionEdit = observer((): JSX.Element => {
       type,
       categories,
       comment,
+      date,
       transfer,
       history,
     ],
@@ -286,6 +292,12 @@ export const TransactionEdit = observer((): JSX.Element => {
                 ))}
             </select>
           )}
+          <input
+            type="datetime-local"
+            placeholder="Дата операции"
+            value={date}
+            onChange={onChangeFactory<string>(setDate)}
+          />
           <input
             type="text"
             placeholder="Коментарий"

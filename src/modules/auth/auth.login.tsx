@@ -35,7 +35,7 @@ export const AuthLogin = observer(
       event.preventDefault();
       setNotification('');
 
-      user.loginUser(email, password).then(res => {
+      user.loginUser(email.toLowerCase(), password).then(res => {
         if (res.errorCode === APIErrorList.UnauthorizedException) {
           setNotification(
             'Нет такого пользователя, проверьте имя пользователя и пароль',

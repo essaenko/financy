@@ -18,12 +18,14 @@ import { CategoryTypeList } from 'models/category.model';
 
 import css from './transaction.module.css';
 import { NetworkComponentStatusList } from 'api/api.handler';
+import { dateTimeToString } from 'utils/date.utils';
 
 export const TransactionCreate = observer((): JSX.Element => {
   const [payment, setPayment] = useState<number>(0);
   const [type, setType] = useState<TransactionTypeList | 0>(0);
   const [category, setCategory] = useState<number>(0);
   const [cost, setCost] = useState<number>(0);
+  const [date, setDate] = useState<string>(dateTimeToString(new Date()));
   const [comment, setComment] = useState<string>('');
   const [transfer, setTransfer] = useState<number>(0);
   const [notification, setNotification] = useState<string>('');
@@ -67,7 +69,7 @@ export const TransactionCreate = observer((): JSX.Element => {
         setNotification(
           transactionFormType === TransactionFormTypeList.Transaction
             ? 'Выберите средство платежа для операции'
-            : 'Select from payment method',
+            : 'Выберите откуда списать средства',
         );
 
         return void 0;
@@ -120,6 +122,7 @@ export const TransactionCreate = observer((): JSX.Element => {
           ? category
           : (transferCategory?.id as number),
         cost,
+        date,
         comment,
         transactionFormType === TransactionFormTypeList.Transfer
           ? transfer
@@ -146,6 +149,7 @@ export const TransactionCreate = observer((): JSX.Element => {
       comment,
       transfer,
       history,
+      date,
     ],
   );
 
@@ -193,7 +197,7 @@ export const TransactionCreate = observer((): JSX.Element => {
               <option value={0} disabled key={0}>
                 {transactionFormType === TransactionFormTypeList.Transaction
                   ? 'Средство платежа'
-                  : 'Карта отправитель'}
+                  : 'Списать с'}
               </option>
               {payments.map(payment => (
                 <option key={payment.id} value={payment.id}>
@@ -229,26 +233,29 @@ export const TransactionCreate = observer((): JSX.Element => {
             </select>
           )}
           {transactionFormType === TransactionFormTypeList.Transaction && (
-            <select
-              value={category}
-              onChange={onChangeFactory<number>(setCategory)}
-            >
-              <option value={0} disabled key={0}>
-                Категория
-              </option>
-              {categories
-                .filter(
-                  category =>
-                    typeof type === 'number' ||
-                    category.type === (type as unknown as CategoryTypeList),
-                )
-                .map(category => (
-                  <option value={category.id} key={category.id}>
-                    {category.name}
-                    {category.parent ? ` (${category.parent.name})` : ''}
-                  </option>
-                ))}
-            </select>
+            <div>
+              <select
+                value={category}
+                onChange={onChangeFactory<number>(setCategory)}
+              >
+                <option value={0} disabled key={0}>
+                  Категория
+                </option>
+                {categories
+                  .filter(
+                    category =>
+                      typeof type === 'number' ||
+                      category.type === (type as unknown as CategoryTypeList),
+                  )
+                  .map(category => (
+                    <option value={category.id} key={category.id}>
+                      {category.name}
+                      {category.parent ? ` (${category.parent.name})` : ''}
+                    </option>
+                  ))}
+              </select>
+              <NavLink to="/dashboard/category/create">Создать</NavLink>
+            </div>
           )}
           <input
             type="number"
@@ -274,6 +281,11 @@ export const TransactionCreate = observer((): JSX.Element => {
                 ))}
             </select>
           )}
+          <input
+            type="datetime-local"
+            value={date}
+            onChange={onChangeFactory<string>(setDate)}
+          />
           <input
             type="text"
             placeholder="Коментарий"

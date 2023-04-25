@@ -56,12 +56,12 @@
   }
 
   .icon {
-    color: var(--system-black);
+    color: var(--TextBase);
     cursor: pointer;
   }
 
   .loader {
-    color: var(--system-light-text);
+    color: var(--TextNotification);
 
     .icon {
       display: block;
@@ -88,7 +88,7 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 21px;
-    color: var(--system-black);
+    color: var(--TextBase);
 
     &.parentNode {
       &:hover {

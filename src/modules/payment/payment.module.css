@@ -10,7 +10,7 @@
 
     .icon {
       margin-left: 10px;
-      color: var(--system-black);
+      color: var(--TextBase);
       cursor: pointer;
     }
   }
@@ -52,7 +52,7 @@
       color: var(--system-gray);
     }
     .loader {
-      color: var(--system-light-text);
+      color: var(--TextNotification);
     }
 
     .paymentAccountCollection {
@@ -108,7 +108,7 @@
       .paymentMethod {
         padding: 5px 10px;
         display: flex;
-        color: var(--system-black);
+        color: var(--TextBase);
         font-size: 16px;
         align-items: center;
         border-bottom: 1px solid var(--system-aluminium);
@@ -128,9 +128,9 @@
 
           padding: 10px;
           border: 0;
-          background-color: var(--system-gray);
+          background-color: var(--PaymentMethod);
           margin-top: 10px;
-          color: var(--system-white);
+          color: var(--TextContrast);
           border-radius: 5px;
 
           .paymentDescription {

@@ -1,12 +1,12 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import { NetworkComponentStatusList } from '../api/api.handler';
+import { NetworkComponentStatusList } from 'api/api.handler';
 import {
   approveFamilyRequest,
   createFamilyRequest,
   fetchFamilyRequest,
   fetchFamilyRequests,
   rejectFamilyRequest,
-} from '../api/api.familyrequest';
+} from 'api/api.familyrequest';
 
 export interface FamilyRequestModel {
   id: number | undefined;

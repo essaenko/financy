@@ -40,7 +40,7 @@ export const CategoryEdit = observer((): JSX.Element => {
   );
 
   const onChangeFactory = useCallback(
-    <T extends any>(setter: Dispatch<SetStateAction<T>>) =>
+    <T extends unknown>(setter: Dispatch<SetStateAction<T>>) =>
       ({
         currentTarget: { value },
       }: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {

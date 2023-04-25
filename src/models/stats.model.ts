@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import { NetworkComponentStatusList } from '../api/api.handler';
+import { NetworkComponentStatusList } from 'api/api.handler';
 import { TransactionTypeList } from './transaction.model';
-import { fetchStatsData } from '../api/api.stats';
+import { fetchStatsData } from 'api/api.stats';
 
 export interface StatsBatchModel {
   date: string;

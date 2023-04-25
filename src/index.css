@@ -4,6 +4,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   overflow: hidden;
+  color: var(--TextBase);
 }
 
 html {
@@ -58,10 +59,14 @@ h4 {
 
 img {
   display: block;
+
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
 }
 
 a {
-  color: var(--system-blue);
+  color: var(--TextLink);
   text-decoration: none;
 }
 
@@ -81,7 +86,7 @@ input[type='date'] {
   border-color: var(--system-silver);
   padding: 2px 8px;
   border-width: 1px;
-  color: var(--system-black);
+  color: var(--TextBase);
   font-size: 16px;
   border-radius: 2px;
   border-style: solid;
@@ -131,9 +136,10 @@ form {
     width: 100%;
     display: block;
     border-color: var(--system-silver);
+    background-color: var(--MainTheme);
     padding: 2px 8px;
     border-width: 1px;
-    color: var(--system-black);
+    color: var(--TextBase);
     font-size: 18px;
     border-radius: 2px;
     border-style: solid;
@@ -153,7 +159,8 @@ form {
     }
 
     & + input,
-    & + select {
+    & + select,
+    & + div {
       margin-top: 10px;
     }
 
@@ -171,14 +178,14 @@ form {
     border-radius: 4px;
     font-weight: 400;
     background: linear-gradient(#42a1ec, #0070c9);
-    color: var(--system-white);
+    color: var(--TextWhite);
     width: auto;
 
     &.flat {
       background: var(--system-silver);
       border: 0;
       width: 100%;
-      color: var(--system-black);
+      color: var(--TextBase);
       transition: 0.2s;
 
       &:hover {

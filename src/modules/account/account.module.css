@@ -48,7 +48,7 @@
   }
 
   .emptyList {
-    color: var(--system-light-text);
+    color: var(--TextNotification);
   }
 
   .footerLink {

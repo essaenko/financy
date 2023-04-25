@@ -34,7 +34,7 @@
       font-size: 18px;
       padding: 0 10px;
       border: 1px solid var(--system-aluminium);
-      color: var(--system-black);
+      color: var(--TextBase);
       margin-top: 0 !important;
 
       &.invalidField {
@@ -109,7 +109,7 @@
         border-radius: 4px;
         font-weight: 400;
         background: linear-gradient(#42a1ec, #0070c9);
-        color: var(--system-white);
+        color: var(--TextWhite);
         width: auto;
 
         &:hover {

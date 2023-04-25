@@ -4,6 +4,7 @@
   justify-content: space-around;
   border-radius: 5px;
   transition: 0.2s all;
+  background-color: var(--MainThemeContrast);
 
   .tab {
     display: flex;

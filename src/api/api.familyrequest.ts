@@ -1,5 +1,5 @@
 import { APIParsedResponse, requestHandler } from './api.handler';
-import { FamilyRequestModel } from '../models/familyrequest.model';
+import { FamilyRequestModel } from 'models/familyrequest.model';
 import { api } from './api.transport';
 
 export const fetchFamilyRequests = async (): Promise<

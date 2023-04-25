@@ -1,7 +1,7 @@
 .root {
   height: 45px;
   background-color: var(--system-opacied-gray);
-  color: var(--system-white);
+  color: var(--TextWhite);
   display: flex;
   align-items: center;
   font-size: 19px;
@@ -64,7 +64,7 @@
     align-items: center;
 
     a {
-      color: var(--system-white)
+      color: var(--TextWhite);
     }
 
     .icon {

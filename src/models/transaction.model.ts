@@ -102,6 +102,7 @@ export class TransactionCollectionState {
     type: TransactionTypeList,
     category: number,
     cost: number,
+    date: string,
     comment?: string,
     to?: number,
   ): Promise<APIParsedResponse<TransactionModel>> {
@@ -111,6 +112,7 @@ export class TransactionCollectionState {
       type,
       category,
       cost,
+      date,
       comment,
       to,
     );
@@ -131,6 +133,7 @@ export class TransactionCollectionState {
     type: TransactionTypeList,
     category: number,
     cost: number,
+    date: string,
     comment?: string,
     to?: number,
   ): Promise<APIParsedResponse<TransactionModel>> {
@@ -139,7 +142,7 @@ export class TransactionCollectionState {
       type,
       category,
       cost,
-      Date.now(),
+      new Date(date).getTime(),
       comment,
       to,
     );

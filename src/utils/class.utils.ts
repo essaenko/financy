@@ -1,4 +1,4 @@
-import { TransactionTypeList } from '../models/transaction.model';
+import { TransactionTypeList } from 'models/transaction.model';
 
 export enum DateIntervalList {
   Ever = 'Ever',

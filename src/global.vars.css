@@ -1,22 +1,77 @@
-:root {
-  --system-black: #333;
-  --system-light-text: #888;
-  --system-gray: #787878;
-  --system-silver: #d6d8db;
-  --system-mate-silver: #e4e6e8;
-  --system-mate-aluminium: #d4d4d4;
-  --system-aluminium: #c5c5c5;
-  --system-opacied-gray: rgba(29, 29, 31, 0.7);
-  --system-light-gray: #f3f3f3;
-  --system-white: #fff;
-  --system-opacied-white: rgba(255, 255, 255, 0.7);
-  --system-blue: rgb(0, 122, 255);
-  --system-yellow: #FFFF00;
-  --system-light-blue: #3b7fca;
-  --system-red: orangered;
-  --system-red-light: rgba(255, 0, 0, 0.15);
-  --pick: #d9d9d9;
-  --system-green: #65db39;
+@media (prefers-color-scheme: light) {
+  :root {
+    --system-black: #333;
+    --system-light-text: #888;
+    --system-gray: #787878;
+    --system-silver: #d6d8db;
+    --system-mate-silver: #e4e6e8;
+    --system-mate-aluminium: #d4d4d4;
+    --system-aluminium: #c5c5c5;
+    --system-opacied-gray: rgba(29, 29, 31, 0.7);
+    --system-light-gray: #f3f3f3;
+    --system-white: #fff;
+    --system-opacied-white: rgba(255, 255, 255, 0.7);
+    --system-blue: rgb(0, 122, 255);
+    --system-yellow: #FFFF00;
+    --system-light-blue: #3b7fca;
+    --system-pink-blue: #809fff;
+    --system-red: orangered;
+    --system-red-light: rgba(255, 0, 0, 0.15);
+    --pick: #d9d9d9;
+    --system-green: #65db39;
 
-  --mobile-device-width: 414px;
+    --mobile-device-width: 414px;
+
+    --TextBase: var(--system-black);
+    --TextNotification: var(--TextNotification);
+    --TextContrast: var(--system-white);
+    --TextLink: var(--system-blue);
+    --TextSuccess: var(--system-green);
+    --TextWhite: var(--system-white);
+
+    --MainTheme: var(--system-white);
+    --MainThemeContrast: var(--system-white);
+
+    --Transaction: var(--system-mate-silver);
+    --PaymentMethod: var(--system-gray);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --system-black: #333;
+    --system-light-text: #888;
+    --system-gray: #787878;
+    --system-silver: #d6d8db;
+    --system-mate-silver: #e4e6e8;
+    --system-mate-aluminium: #d4d4d4;
+    --system-aluminium: #c5c5c5;
+    --system-opacied-gray: rgba(29, 29, 31, 0.7);
+    --system-light-gray: #f3f3f3;
+    --system-white: #fff;
+    --system-opacied-white: rgba(255, 255, 255, 0.7);
+    --system-blue: rgb(0, 122, 255);
+    --system-pink-blue: #809fff;
+    --system-yellow: #FFFF00;
+    --system-light-blue: #3b7fca;
+    --system-red: orangered;
+    --system-red-light: rgba(255, 0, 0, 0.15);
+    --pick: #d9d9d9;
+    --system-green: #2a9b00;
+
+    --mobile-device-width: 414px;
+
+    --TextBase: var(--system-white);
+    --TextNotification: var(--system-silver);
+    --TextContrast: var(--system-black);
+    --TextLink: var(--system-pink-blue);
+    --TextSuccess: var(--system-green);
+    --TextWhite: var(--system-white);
+
+    --MainTheme: var(--system-gray);
+    --MainThemeContrast: var(--pick);
+
+    --Transaction: var(--system-silver);
+    --PaymentMethod: var(--pick)
+  }
 }

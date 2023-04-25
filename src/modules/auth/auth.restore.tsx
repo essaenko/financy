@@ -54,7 +54,7 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
   return (
     <div className={css.login}>
       <form className={css.form} autoComplete="off">
-        <h2>Сбросить пароль</h2>
+        <h2>Восстановить пароль</h2>
         <input
           type="email"
           placeholder="E-mail"
@@ -65,7 +65,7 @@ export const AuthRestore = observer(({ user }: PropsType): JSX.Element => {
         />
         <span>{notification}</span>
         <button className={css.submit} onClick={onSubmit} disabled={disabled}>
-          Сбросить
+          Восстановить
         </button>
         <Link to="/" className={css.link}>
           Назад
